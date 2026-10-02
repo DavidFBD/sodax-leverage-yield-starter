@@ -1,7 +1,6 @@
 import { CheckCircleIcon } from '@phosphor-icons/react';
 import { ChainKeys, type LeverageYieldVault } from '@sodax/types';
-import { useState } from 'react';
-import { formatUnits } from 'viem';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -20,6 +19,7 @@ import { useVaultWithdraw } from '../hooks/useVaultWithdraw';
 import { useWithdrawQuote } from '../hooks/useWithdrawQuote';
 import { vaultBrand } from '../lib/brands';
 import { SHARE_DECIMALS } from '../lib/vaults';
+import { AmountChips } from './AmountChips';
 import { ChainSelect } from './ChainSelect';
 import { QuoteError } from './QuoteError';
 import { Stepper } from './Stepper';
@@ -40,6 +40,7 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
   const { tokens, token: outputToken, pickToken } = useTokenChoice(dstChainKey);
 
   const [sharesText, setSharesText] = useState('');
+  const sharesRef = useRef<HTMLInputElement>(null);
   const shares = parseTokenAmount(sharesText, SHARE_DECIMALS);
 
   const { state, withdraw } = useVaultWithdraw();
@@ -104,21 +105,23 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
               <div className="relative">
                 <Input
                   id="withdraw-shares"
+                  ref={sharesRef}
                   inputMode="decimal"
                   placeholder="0.00"
                   value={sharesText}
                   onChange={event => setSharesText(event.target.value)}
-                  className="h-12 pr-20 text-lg"
+                  className="h-12 text-lg"
                 />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="absolute right-2 top-1/2 -translate-y-1/2"
-                  onClick={() => setSharesText(formatUnits(shareBalance, SHARE_DECIMALS))}
-                >
-                  Max
-                </Button>
               </div>
+              <AmountChips
+                base={shareBalance}
+                maxRatio={1}
+                decimals={SHARE_DECIMALS}
+                value={sharesText}
+                onFill={setSharesText}
+                inputRef={sharesRef}
+                disabledReason={shareBalance === 0n ? 'No shares to withdraw' : undefined}
+              />
             </div>
 
             <div className="grid grid-cols-2 gap-3">

@@ -36,6 +36,9 @@ export const MIN_GAS_BALANCE: Record<SourceChainKey, bigint> = {
   [ChainKeys.SONIC_MAINNET]: parseUnits('0.1', 18),
 };
 
+/** Share of the wallet balance the deposit form's Max chip fills: headroom for gas and rounding. */
+export const MAX_FILL_RATIO = 0.97;
+
 /** Vault `name` as returned by `sodax.leverageYield.listVaults()`. */
 export const DEFAULT_VAULT_NAME = 'lsodaSUSDS';
 

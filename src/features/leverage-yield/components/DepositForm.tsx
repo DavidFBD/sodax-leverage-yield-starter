@@ -1,6 +1,5 @@
 import { isNativeToken } from '@sodax/types';
-import { useState } from 'react';
-import { formatUnits } from 'viem';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { InfoTip } from '@/components/ui/info-tip';
@@ -10,6 +9,7 @@ import { OrbPanel, ThinkingOrb } from '@/components/ui/thinking-orb';
 import {
   DEFAULT_SOURCE_CHAIN,
   isSourceChain,
+  MAX_FILL_RATIO,
   NATIVE_GAS_RESERVE,
   SOURCE_CHAINS,
   type SourceChainKey,
@@ -21,6 +21,7 @@ import { useDepositQuote } from '../hooks/useDepositQuote';
 import { useSourceEligibility } from '../hooks/useSourceEligibility';
 import { useTokenChoice } from '../hooks/useTokenChoice';
 import { useVault, useVaults } from '../hooks/useVaults';
+import { AmountChips } from './AmountChips';
 import { ChainSelect } from './ChainSelect';
 import { DepositDialog, type DepositReview } from './DepositDialog';
 import { PositionCard } from './PositionCard';
@@ -63,9 +64,11 @@ export function DepositForm({
   );
 
   const [amountText, setAmountText] = useState('');
+  const amountRef = useRef<HTMLInputElement>(null);
   const [riskAcknowledged, setRiskAcknowledged] = useRiskAcknowledgement();
   const inputAmount = token ? parseTokenAmount(amountText, token.decimals) : undefined;
   const balance = sources.balance(chainKey, token);
+  const nativeSource = !!token && isNativeToken(chainKey, token);
   const balanceLoading = sources.isLoading(chainKey);
 
   // Inputs the user is reviewing. While the dialog is open it quotes them itself, so the form stops quoting.
@@ -164,24 +167,30 @@ export function DepositForm({
             <div className="relative">
               <Input
                 id="deposit-amount"
+                ref={amountRef}
                 inputMode="decimal"
                 placeholder="0.00"
                 value={amountText}
                 onChange={event => setAmountText(event.target.value)}
-                className="h-14 pr-20 text-xl"
+                className="h-14 text-xl"
               />
-              {/* No Max for the native token: the user needs some of it for gas. */}
-              {balance !== undefined && balance > 0n && !isNativeToken(chainKey, token) && (
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="absolute right-2 top-1/2 -translate-y-1/2"
-                  onClick={() => setAmountText(formatUnits(balance, token.decimals))}
-                >
-                  Max
-                </Button>
-              )}
             </div>
+            <AmountChips
+              base={balance}
+              cap={nativeSource && balance !== undefined ? balance - NATIVE_GAS_RESERVE[chainKey] : balance}
+              maxRatio={MAX_FILL_RATIO}
+              decimals={token.decimals}
+              value={amountText}
+              onFill={setAmountText}
+              inputRef={amountRef}
+              disabledReason={
+                !wallet.isConnected
+                  ? 'Connect a wallet to use these'
+                  : balance === 0n
+                    ? `No ${token.symbol} on ${chainName(chainKey)}`
+                    : undefined
+              }
+            />
           </div>
 
           <Reveal
