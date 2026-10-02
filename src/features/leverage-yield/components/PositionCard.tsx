@@ -52,7 +52,7 @@ export function PositionCard({
         ) : (
           <>
             <div>
-              <p className="text-3xl font-bold">{formatTokenAmount(holding.shares, SHARE_DECIMALS)}</p>
+              <p className="text-3xl font-semibold">{formatTokenAmount(holding.shares, SHARE_DECIMALS)}</p>
               <p className="text-sm text-muted-foreground">{vault.name} shares</p>
             </div>
             {value !== undefined && (
@@ -66,7 +66,7 @@ export function PositionCard({
                 href={explorerAddressUrl(ChainKeys.SONIC_MAINNET, holding.holder)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-mono text-primary hover:underline"
+                className="font-mono text-foreground underline decoration-link decoration-2 underline-offset-4 hover:decoration-primary"
               >
                 {shortenAddress(holding.holder)}
               </a>{' '}

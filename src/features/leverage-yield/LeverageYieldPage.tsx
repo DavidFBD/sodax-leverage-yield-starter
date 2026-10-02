@@ -18,7 +18,7 @@ export function LeverageYieldPage() {
   };
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-16">
       <NextPrompt next="done" />
       <VaultGrid vaults={vaults} address={address} selected={vaultName} onSelect={selectVault} />
       <section id="deposit" className="scroll-mt-20">

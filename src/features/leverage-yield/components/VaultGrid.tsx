@@ -15,7 +15,7 @@ export function VaultGrid({
   return (
     <section className="flex flex-col gap-4">
       <div>
-        <h2 className="text-2xl font-bold">Vaults</h2>
+        <h2 className="text-2xl font-semibold">Vaults</h2>
         <p className="text-sm text-muted-foreground">
           Each vault holds a liquid staking token, borrows against it and re-stakes, earning a levered staking yield.
         </p>

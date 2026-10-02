@@ -59,9 +59,9 @@ export function VaultCard({
         </div>
         <div className="pt-2">
           {apr ? (
-            <p className="text-3xl font-bold text-primary">{formatRayPercent(apr.effectiveNetAprRay)}</p>
+            <p className="text-3xl font-semibold text-foreground">{formatRayPercent(apr.effectiveNetAprRay)}</p>
           ) : aprError ? (
-            <p className="text-3xl font-bold text-subtle-foreground">-</p>
+            <p className="text-3xl font-semibold text-subtle-foreground">-</p>
           ) : (
             <ThinkingOrb state="breathing" size={32} label="Loading vault" />
           )}

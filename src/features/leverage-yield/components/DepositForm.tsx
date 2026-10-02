@@ -84,7 +84,7 @@ export function DepositForm({
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between text-sm">
               <span className="font-medium">Vault</span>
-              <VaultApr vault={vault.vault} className="font-semibold text-primary" />
+              <VaultApr vault={vault.vault} className="font-semibold text-foreground" />
             </div>
             <VaultPicker vaults={vaults} value={vault.name} onChange={onVaultChange} />
           </div>

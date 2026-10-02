@@ -17,12 +17,6 @@ importers:
       '@fontsource-variable/inter':
         specifier: 5.2.8
         version: 5.2.8
-      '@fontsource/inria-serif':
-        specifier: 5.2.8
-        version: 5.2.8
-      '@fontsource/shrikhand':
-        specifier: 5.2.8
-        version: 5.2.8
       '@phosphor-icons/react':
         specifier: 2.1.10
         version: 2.1.10(react-dom@19.1.4(react@19.1.4))(react@19.1.4)
@@ -746,12 +740,6 @@ packages:
 
   '@fontsource-variable/inter@5.2.8':
     resolution: {integrity: sha512-kOfP2D+ykbcX/P3IFnokOhVRNoTozo5/JxhAIVYLpea/UBmCQ/YWPBfWIDuBImXX/15KH+eKh4xpEUyS2sQQGQ==}
-
-  '@fontsource/inria-serif@5.2.8':
-    resolution: {integrity: sha512-ik5kL2Z4f3hvfO1Dg/TYgdVsQjyFVEmtt/pzra9NhvAJl5dhbLgQEkMDhzI8FXHHxuoqtVyriOQAvY5vSkxLjQ==}
-
-  '@fontsource/shrikhand@5.2.8':
-    resolution: {integrity: sha512-kOUZfuOgz9qoL84B/rJIAoYfszXT1u9ECAGZXCmPoMggR/8lCd0MQfrCdHJptYLTYLtS85KTTMhFW0X9aBBztg==}
 
   '@gemini-wallet/core@0.2.0':
     resolution: {integrity: sha512-vv9aozWnKrrPWQ3vIFcWk7yta4hQW1Ie0fsNNPeXnjAxkbXr2hqMagEptLuMxpEP2W3mnRu05VDNKzcvAuuZDw==}
@@ -7075,10 +7063,6 @@ snapshots:
   '@floating-ui/utils@0.2.12': {}
 
   '@fontsource-variable/inter@5.2.8': {}
-
-  '@fontsource/inria-serif@5.2.8': {}
-
-  '@fontsource/shrikhand@5.2.8': {}
 
   '@gemini-wallet/core@0.2.0(viem@2.29.2(bufferutil@4.1.0)(typescript@5.9.2)(utf-8-validate@6.0.6)(zod@3.22.4))':
     dependencies:

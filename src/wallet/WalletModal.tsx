@@ -77,7 +77,7 @@ export function WalletModal() {
 
         {state.kind === 'success' && (
           <div className="flex flex-col items-center gap-2 py-4 text-center">
-            <CheckCircleIcon weight="duotone" className="size-8 text-success" />
+            <CheckCircleIcon weight="duotone" className="size-8 text-foreground" />
             <p className="font-mono text-sm">{shortenAddress(state.account.address)}</p>
           </div>
         )}
@@ -121,7 +121,9 @@ function WalletList() {
                 className="flex items-center justify-between rounded-md border border-dashed px-4 py-3 hover:bg-secondary"
               >
                 <span className="font-medium">{wallet.name}</span>
-                <span className="text-xs font-medium text-primary">Install</span>
+                <span className="text-xs font-medium underline decoration-link decoration-2 underline-offset-4">
+                  Install
+                </span>
               </a>
             </li>
           ))}
@@ -134,11 +136,13 @@ function WalletList() {
               <button
                 type="button"
                 onClick={() => void selectWallet(connector)}
-                className="flex w-full items-center gap-3 rounded-md border bg-card px-4 py-3 text-left transition-colors hover:bg-secondary"
+                className="flex w-full items-center gap-3 rounded-md border bg-card px-4 py-3 text-left shadow-card transition-colors hover:border-border-strong hover:bg-secondary"
               >
                 <ConnectorIcon connector={connector} />
                 <span className="flex-1 font-medium">{connector.name}</span>
-                <span className="text-xs text-success">Detected</span>
+                <span className="rounded-sm bg-accent px-2 py-1 text-xs font-medium text-accent-foreground">
+                  Detected
+                </span>
               </button>
             ) : (
               <div className="flex items-center gap-3 rounded-md border border-dashed px-4 py-3">
@@ -149,7 +153,7 @@ function WalletList() {
                     href={connector.installUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-medium text-primary hover:underline"
+                    className="text-xs font-medium text-foreground underline decoration-link decoration-2 underline-offset-4 hover:decoration-primary"
                   >
                     Install
                   </a>

@@ -11,7 +11,7 @@ export function App() {
         <Header />
         <main className="flex-1">
           <Hero />
-          <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+          <div className="mx-auto max-w-page px-4 py-14 sm:px-6">
             <LeverageYieldPage />
           </div>
         </main>

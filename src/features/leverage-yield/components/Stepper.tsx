@@ -13,9 +13,9 @@ export function Stepper({ steps }: { steps: { label: string; status: StepStatus;
           <span
             className={cn(
               'mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full border text-xs',
-              step.status === 'done' && 'border-success bg-success text-white',
-              step.status === 'active' && 'border-primary text-primary',
-              step.status === 'error' && 'border-destructive bg-destructive text-white',
+              step.status === 'done' && 'border-primary bg-primary text-primary-foreground',
+              step.status === 'active' && 'border-primary bg-card',
+              step.status === 'error' && 'border-destructive bg-destructive text-destructive-foreground',
               (step.status === 'pending' || step.status === 'skipped') && 'text-subtle-foreground',
             )}
           >

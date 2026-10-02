@@ -12,7 +12,7 @@ export function TxLink({ chainKey, hash }: { chainKey: ChainKey; hash: string })
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-1 text-primary hover:underline"
+      className="inline-flex items-center gap-1 text-foreground underline decoration-link decoration-2 underline-offset-4 hover:decoration-primary"
     >
       {text}
       <ArrowSquareOutIcon weight="duotone" className="size-3" />
