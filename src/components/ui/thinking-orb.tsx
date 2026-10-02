@@ -55,6 +55,9 @@ export function ThinkingOrb({
   decorative = false,
   label,
   className,
+  speed,
+  paused = false,
+  fill = false,
 }: {
   state?: OrbState;
   /** The library's tuned presets: 20 inline with text, 64 avatar scale; 32 sits between. */
@@ -65,11 +68,20 @@ export function ThinkingOrb({
   decorative?: boolean;
   label?: string;
   className?: string;
+  /** Animation speed multiplier on the preset (1 = tuned speed). */
+  speed?: number;
+  paused?: boolean;
+  /** Stretch the canvas to the parent box (a large, blurred backdrop). The preset still sets the drawing. */
+  fill?: boolean;
 }) {
   const [ink] = useState(() => readInk(tone));
   return (
     <span
-      className={cn('relative inline-flex shrink-0 items-center justify-center', SIZE_CLASS[size], className)}
+      className={cn(
+        'relative inline-flex shrink-0 items-center justify-center',
+        fill ? 'size-full' : SIZE_CLASS[size],
+        className,
+      )}
       role={decorative ? undefined : 'status'}
       aria-hidden={decorative || undefined}
       data-orb={state}
@@ -81,9 +93,15 @@ export function ThinkingOrb({
             size={size}
             theme="light"
             color={ink}
+            speed={speed}
+            paused={paused}
             aria-label={decorative ? undefined : (label ?? LABEL[state])}
             aria-hidden={decorative || undefined}
-            style={{ width: size, height: size, display: 'block' }}
+            style={
+              fill
+                ? { width: '100%', height: '100%', display: 'block' }
+                : { width: size, height: size, display: 'block' }
+            }
           />
         </Suspense>
       </OrbBoundary>

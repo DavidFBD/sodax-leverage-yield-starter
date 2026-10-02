@@ -1,3 +1,4 @@
+import { BackgroundOrb } from '@/components/layout/BackgroundOrb';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { Hero } from '@/components/layout/Hero';
@@ -9,7 +10,8 @@ export function App() {
   return (
     <MotionProvider>
       <TooltipProvider>
-        <div className="flex min-h-screen flex-col">
+        <div className="relative isolate flex min-h-screen flex-col overflow-x-clip">
+          <BackgroundOrb />
           <Header />
           <main className="flex-1">
             <Hero />
