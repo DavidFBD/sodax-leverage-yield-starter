@@ -6,6 +6,7 @@ import {
   useLeverageYieldTotalAssets,
 } from '@sodax/dapp-kit';
 import type { LeverageYieldVault } from '@sodax/types';
+import { AnimatePresence, m } from 'motion/react';
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,7 +15,6 @@ import { ThinkingOrb } from '@/components/ui/thinking-orb';
 import { Tooltip } from '@/components/ui/tooltip';
 import { SOURCE_CHAINS } from '@/config/workshop';
 import { formatBps, formatRayPercent, formatTokenAmount, formatWad } from '@/lib/format';
-import { cn } from '@/lib/utils';
 import { useSharePrice } from '../hooks/useShareValue';
 import { SHARE_DECIMALS, underlying, yieldSource } from '../lib/vaults';
 
@@ -46,7 +46,19 @@ export function VaultCard({
   const { symbol, decimals } = underlying(vault);
 
   return (
-    <Card className={cn('flex flex-col', selected && 'ring-2 ring-primary')}>
+    <Card className="relative flex w-full flex-col transition-shadow duration-200 ease-out hover:shadow-lg">
+      {/* Selected border fades in when this vault becomes the deposit target. */}
+      <AnimatePresence initial={false}>
+        {selected && (
+          <m.span
+            aria-hidden
+            className="pointer-events-none absolute -inset-px rounded-lg ring-2 ring-primary"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+          />
+        )}
+      </AnimatePresence>
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between gap-2">
           <div>

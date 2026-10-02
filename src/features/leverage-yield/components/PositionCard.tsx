@@ -3,6 +3,7 @@ import { ChainKeys, type LeverageYieldVault } from '@sodax/types';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTweenedBigint } from '@/components/ui/motion';
 import { OrbPanel } from '@/components/ui/thinking-orb';
 import type { SourceChainKey } from '@/config/workshop';
 import { chainName, explorerAddressUrl } from '@/lib/chains';
@@ -33,6 +34,7 @@ export function PositionCard({
   const value = useShareValue(vault.vault, holding?.shares || undefined);
   const asset = underlying(vault);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const shownShares = useTweenedBigint(holding?.shares);
 
   return (
     <Card>
@@ -52,7 +54,9 @@ export function PositionCard({
         ) : (
           <>
             <div>
-              <p className="text-3xl font-semibold">{formatTokenAmount(holding.shares, SHARE_DECIMALS)}</p>
+              <p className="text-3xl font-semibold tabular-nums">
+                {formatTokenAmount(shownShares ?? holding.shares, SHARE_DECIMALS)}
+              </p>
               <p className="text-sm text-muted-foreground">{vault.name} shares</p>
             </div>
             {value !== undefined && (

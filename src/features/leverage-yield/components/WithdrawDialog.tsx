@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Flash, Reveal } from '@/components/ui/motion';
 import { OrbPanel } from '@/components/ui/thinking-orb';
 import { DEFAULT_SLIPPAGE_BPS, type SourceChainKey } from '@/config/workshop';
 import { chainName } from '@/lib/chains';
@@ -123,24 +124,40 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
               </div>
             </div>
 
-            {shares && quote.error ? (
-              <QuoteError message={quote.error} onRetry={quote.refetch} />
-            ) : shares && quote.isLoading ? (
-              <OrbPanel className="h-24">Getting a live quote</OrbPanel>
-            ) : quote.amountOut !== undefined && quote.minAmountOut !== undefined && outputToken ? (
-              <dl className="grid grid-cols-2 gap-y-2 rounded-md bg-secondary p-4 text-sm">
-                <dt className="text-muted-foreground">You receive (est.)</dt>
-                <dd className="text-right font-semibold">
-                  {formatTokenAmount(quote.amountOut, outputToken.decimals)} {outputToken.symbol}
-                </dd>
-                <dt className="text-muted-foreground">Minimum received</dt>
-                <dd className="text-right">
-                  {formatTokenAmount(quote.minAmountOut, outputToken.decimals)} {outputToken.symbol}
-                </dd>
-                <dt className="text-muted-foreground">Max slippage</dt>
-                <dd className="text-right">{formatBps(DEFAULT_SLIPPAGE_BPS)}</dd>
-              </dl>
-            ) : null}
+            <Reveal
+              id={
+                shares && quote.error
+                  ? 'error'
+                  : shares && quote.isLoading
+                    ? 'loading'
+                    : quote.amountOut !== undefined && quote.minAmountOut !== undefined && outputToken
+                      ? 'quote'
+                      : false
+              }
+            >
+              {shares && quote.error ? (
+                <QuoteError message={quote.error} onRetry={quote.refetch} />
+              ) : shares && quote.isLoading ? (
+                <OrbPanel className="h-24">Getting a live quote</OrbPanel>
+              ) : quote.amountOut !== undefined && quote.minAmountOut !== undefined && outputToken ? (
+                <dl className="grid grid-cols-2 gap-y-2 rounded-md bg-secondary p-4 text-sm">
+                  <dt className="text-muted-foreground">You receive (est.)</dt>
+                  <dd className="text-right font-semibold">
+                    <Flash
+                      value={`${formatTokenAmount(quote.amountOut, outputToken.decimals)} ${outputToken.symbol}`}
+                    />
+                  </dd>
+                  <dt className="text-muted-foreground">Minimum received</dt>
+                  <dd className="text-right">
+                    <Flash
+                      value={`${formatTokenAmount(quote.minAmountOut, outputToken.decimals)} ${outputToken.symbol}`}
+                    />
+                  </dd>
+                  <dt className="text-muted-foreground">Max slippage</dt>
+                  <dd className="text-right">{formatBps(DEFAULT_SLIPPAGE_BPS)}</dd>
+                </dl>
+              ) : null}
+            </Reveal>
 
             <Button size="lg" disabled={action.disabled} busy={action.busy} onClick={action.onClick}>
               {action.label}

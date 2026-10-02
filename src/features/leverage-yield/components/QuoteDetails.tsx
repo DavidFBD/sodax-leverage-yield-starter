@@ -1,4 +1,5 @@
 import type { LeverageYieldVault, XToken } from '@sodax/types';
+import { Flash } from '@/components/ui/motion';
 import { DEFAULT_SLIPPAGE_BPS } from '@/config/workshop';
 import { formatBps, formatTokenAmount } from '@/lib/format';
 import { useShareValue } from '../hooks/useShareValue';
@@ -29,19 +30,19 @@ export function QuoteDetails({
       </dd>
       <dt className="text-muted-foreground">You receive (est.)</dt>
       <dd className="text-right font-semibold">
-        {formatTokenAmount(shares, SHARE_DECIMALS)} {vault.name}
+        <Flash value={`${formatTokenAmount(shares, SHARE_DECIMALS)} ${vault.name}`} />
       </dd>
       {value !== undefined && (
         <>
           <dt className="text-muted-foreground">Worth now</dt>
           <dd className="text-right">
-            ≈ {formatTokenAmount(value, asset.decimals)} {asset.symbol}
+            <Flash value={`≈ ${formatTokenAmount(value, asset.decimals)} ${asset.symbol}`} />
           </dd>
         </>
       )}
       <dt className="text-muted-foreground">Minimum received</dt>
       <dd className="text-right">
-        {formatTokenAmount(minShares, SHARE_DECIMALS)} {vault.name}
+        <Flash value={`${formatTokenAmount(minShares, SHARE_DECIMALS)} ${vault.name}`} />
       </dd>
       <dt className="text-muted-foreground">Max slippage</dt>
       <dd className="text-right">{formatBps(DEFAULT_SLIPPAGE_BPS)}</dd>

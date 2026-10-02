@@ -1,5 +1,7 @@
 import { CheckIcon, XIcon } from '@phosphor-icons/react';
+import { AnimatePresence, m } from 'motion/react';
 import type { ReactNode } from 'react';
+import { FAST } from '@/components/ui/motion';
 import { ThinkingOrb } from '@/components/ui/thinking-orb';
 import { cn } from '@/lib/utils';
 
@@ -19,9 +21,21 @@ export function Stepper({ steps }: { steps: { label: string; status: StepStatus;
               (step.status === 'pending' || step.status === 'skipped') && 'text-subtle-foreground',
             )}
           >
-            {step.status === 'done' && <CheckIcon weight="duotone" className="size-3.5" />}
-            {step.status === 'active' && <ThinkingOrb state="connecting" size={20} decorative />}
-            {step.status === 'error' && <XIcon weight="duotone" className="size-3.5" />}
+            {/* Orb, check or cross crossfade as the step moves from active to done (or failed). */}
+            <AnimatePresence initial={false} mode="popLayout">
+              <m.span
+                key={step.status}
+                className="flex items-center justify-center"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={FAST}
+              >
+                {step.status === 'done' && <CheckIcon weight="duotone" className="size-3.5" />}
+                {step.status === 'active' && <ThinkingOrb state="connecting" size={20} decorative />}
+                {step.status === 'error' && <XIcon weight="duotone" className="size-3.5" />}
+              </m.span>
+            </AnimatePresence>
           </span>
           <div className="flex flex-col">
             <span
@@ -34,7 +48,19 @@ export function Stepper({ steps }: { steps: { label: string; status: StepStatus;
               {step.label}
               {step.status === 'skipped' && ' (not needed)'}
             </span>
-            {step.detail && <span className="text-xs text-muted-foreground">{step.detail}</span>}
+            {/* Explorer links slide in when the transaction hash arrives. */}
+            <AnimatePresence initial={false}>
+              {step.detail && (
+                <m.span
+                  className="text-xs text-muted-foreground"
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {step.detail}
+                </m.span>
+              )}
+            </AnimatePresence>
           </div>
         </li>
       ))}

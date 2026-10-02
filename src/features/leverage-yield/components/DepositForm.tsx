@@ -4,6 +4,7 @@ import { formatUnits } from 'viem';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Reveal } from '@/components/ui/motion';
 import { OrbPanel, ThinkingOrb } from '@/components/ui/thinking-orb';
 import {
   DEFAULT_SOURCE_CHAIN,
@@ -168,19 +169,31 @@ export function DepositForm({
             </div>
           </div>
 
-          {inputAmount && quote.error ? (
-            <QuoteError message={quote.error} onRetry={quote.refetch} />
-          ) : inputAmount && quote.isLoading ? (
-            <OrbPanel className="h-32">Getting a live quote</OrbPanel>
-          ) : inputAmount && quote.amountOut !== undefined && quote.minAmountOut !== undefined ? (
-            <QuoteDetails
-              vault={vault}
-              token={token}
-              inputAmount={inputAmount}
-              shares={quote.amountOut}
-              minShares={quote.minAmountOut}
-            />
-          ) : null}
+          <Reveal
+            id={
+              inputAmount && quote.error
+                ? 'error'
+                : inputAmount && quote.isLoading
+                  ? 'loading'
+                  : inputAmount && quote.amountOut !== undefined && quote.minAmountOut !== undefined
+                    ? 'quote'
+                    : false
+            }
+          >
+            {inputAmount && quote.error ? (
+              <QuoteError message={quote.error} onRetry={quote.refetch} />
+            ) : inputAmount && quote.isLoading ? (
+              <OrbPanel className="h-32">Getting a live quote</OrbPanel>
+            ) : inputAmount && quote.amountOut !== undefined && quote.minAmountOut !== undefined ? (
+              <QuoteDetails
+                vault={vault}
+                token={token}
+                inputAmount={inputAmount}
+                shares={quote.amountOut}
+                minShares={quote.minAmountOut}
+              />
+            ) : null}
+          </Reveal>
 
           <RiskNotice />
 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Reveal } from '@/components/ui/motion';
 import { OrbPanel } from '@/components/ui/thinking-orb';
 import type { SourceChainKey } from '@/config/workshop';
 import { chainName } from '@/lib/chains';
@@ -67,19 +68,21 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
 
         {step === 'idle' ? (
           <>
-            {quote.error ? (
-              <QuoteError message={quote.error} onRetry={quote.refetch} />
-            ) : quote.amountOut !== undefined && quote.minAmountOut !== undefined ? (
-              <QuoteDetails
-                vault={vault}
-                token={token}
-                inputAmount={inputAmount}
-                shares={quote.amountOut}
-                minShares={quote.minAmountOut}
-              />
-            ) : (
-              <OrbPanel className="h-32">Getting a live quote</OrbPanel>
-            )}
+            <Reveal id={quote.error ? 'error' : quote.amountOut !== undefined ? 'quote' : 'loading'}>
+              {quote.error ? (
+                <QuoteError message={quote.error} onRetry={quote.refetch} />
+              ) : quote.amountOut !== undefined && quote.minAmountOut !== undefined ? (
+                <QuoteDetails
+                  vault={vault}
+                  token={token}
+                  inputAmount={inputAmount}
+                  shares={quote.amountOut}
+                  minShares={quote.minAmountOut}
+                />
+              ) : (
+                <OrbPanel className="h-32">Getting a live quote</OrbPanel>
+              )}
+            </Reveal>
             <Callout>
               You will sign {isNativeToken(chainKey, token) ? 'one transaction' : 'up to two transactions'} on{' '}
               {chainName(chainKey)}. After that, solvers fill the deposit, usually within a minute or two. Shares go to

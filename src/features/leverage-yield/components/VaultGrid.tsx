@@ -1,4 +1,6 @@
 import type { LeverageYieldVault } from '@sodax/types';
+import { m } from 'motion/react';
+import { BASE } from '@/components/ui/motion';
 import { VaultCard } from './VaultCard';
 
 export function VaultGrid({
@@ -21,14 +23,23 @@ export function VaultGrid({
         </p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {vaults.map(vault => (
-          <VaultCard
+        {/* Staggered fade and rise on first mount only; a 2px lift on hover. */}
+        {vaults.map((vault, index) => (
+          <m.div
             key={vault.name}
-            vault={vault}
-            address={address}
-            selected={vault.name === selected}
-            onDeposit={() => onSelect(vault.name)}
-          />
+            className="flex"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -2 }}
+            transition={{ ...BASE, delay: index * 0.05 }}
+          >
+            <VaultCard
+              vault={vault}
+              address={address}
+              selected={vault.name === selected}
+              onDeposit={() => onSelect(vault.name)}
+            />
+          </m.div>
         ))}
       </div>
     </section>
