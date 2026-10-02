@@ -10,7 +10,7 @@ const DRIFT_SECONDS = 32;
  * Transforms and opacity only, on its own layer. Pauses (drift and the orb's own animation) when the tab is hidden
  * or the layer is offscreen; static under prefers-reduced-motion. Fades down as the page scrolls past the hero.
  *
- * Contrast: at 16% opacity the brightest point mixes cream with amber to about #f8eace. Espresso headline text on that
+ * Contrast: at its brightest the glow mixes cream with amber to about #f6deaa. Espresso headline text on that
  * is about 14:1 and the Bark subline about 5.9:1, both above AA.
  */
 export function BackgroundOrb() {
@@ -59,19 +59,23 @@ export function BackgroundOrb() {
     <m.div
       ref={layer}
       aria-hidden
-      className="pointer-events-none absolute -top-40 -right-48 -z-10 size-[420px] md:-top-56 md:-right-64 md:size-[820px]"
+      className="pointer-events-none absolute -top-24 -right-32 -z-10 size-[420px] md:-top-40 md:-right-40 md:size-[760px]"
       style={{ opacity }}
     >
       <div
         ref={scope}
-        className="size-full opacity-[0.16] blur-2xl"
+        className="relative size-full"
         style={{
           willChange: 'transform',
           maskImage: 'radial-gradient(closest-side, black 55%, transparent 100%)',
           WebkitMaskImage: 'radial-gradient(closest-side, black 55%, transparent 100%)',
         }}
       >
-        <ThinkingOrb state="breathing" size={64} tone="amber" decorative fill speed={0.3} paused={!running} />
+        {/* Warm lamplight under the orb, so the corner glows even between dot pulses. */}
+        <div className="absolute inset-[12%] rounded-full bg-[radial-gradient(closest-side,rgba(249,166,0,0.22),rgba(249,166,0,0.08)_60%,transparent)]" />
+        <div className="absolute inset-0 opacity-45 blur-[1.5px]">
+          <ThinkingOrb state="breathing" size={64} tone="amber" decorative fill speed={0.3} paused={!running} />
+        </div>
       </div>
     </m.div>
   );
