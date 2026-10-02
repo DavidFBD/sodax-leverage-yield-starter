@@ -15,6 +15,7 @@ import { formatBps, formatTokenAmount, parseTokenAmount } from '@/lib/format';
 import { useEvmWallet } from '@/wallet';
 import { useDoneToast } from '../hooks/useDoneToast';
 import { useFlowProgress } from '../hooks/useFlowProgress';
+import { useMarkPending } from '../hooks/useMarkPending';
 import { useTokenChoice } from '../hooks/useTokenChoice';
 import { useVaultWithdraw } from '../hooks/useVaultWithdraw';
 import { useWithdrawQuote } from '../hooks/useWithdrawQuote';
@@ -65,6 +66,8 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
   };
 
   const close = (open: boolean) => !open && !progress.busy && onClose();
+
+  useMarkPending(vault.name, progress.busy);
 
   useDoneToast(
     step === 'done',

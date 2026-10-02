@@ -1,5 +1,5 @@
 import { isNativeToken } from '@sodax/types';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { InfoTip } from '@/components/ui/info-tip';
@@ -36,9 +36,12 @@ import { VaultPicker } from './VaultPicker';
 export function DepositForm({
   vaultName,
   onVaultChange,
+  onAmountChange,
 }: {
   vaultName: string;
   onVaultChange: (name: string) => void;
+  /** Tells the page whether a valid amount is entered (the first-deposit nudge ticks its step). */
+  onAmountChange?: (entered: boolean) => void;
 }) {
   const vaults = useVaults();
   const vault = useVault(vaultName) ?? vaults[0];
@@ -67,6 +70,8 @@ export function DepositForm({
   const amountRef = useRef<HTMLInputElement>(null);
   const [riskAcknowledged, setRiskAcknowledged] = useRiskAcknowledgement();
   const inputAmount = token ? parseTokenAmount(amountText, token.decimals) : undefined;
+  const hasAmount = !!inputAmount && inputAmount > 0n;
+  useEffect(() => onAmountChange?.(hasAmount), [hasAmount, onAmountChange]);
   const balance = sources.balance(chainKey, token);
   const nativeSource = !!token && isNativeToken(chainKey, token);
   const balanceLoading = sources.isLoading(chainKey);

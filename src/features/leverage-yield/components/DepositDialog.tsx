@@ -15,6 +15,7 @@ import { useEvmWallet } from '@/wallet';
 import { useDepositQuote } from '../hooks/useDepositQuote';
 import { useDoneToast } from '../hooks/useDoneToast';
 import { useFlowProgress } from '../hooks/useFlowProgress';
+import { useMarkPending } from '../hooks/useMarkPending';
 import { useVaultDeposit } from '../hooks/useVaultDeposit';
 import { vaultBrand } from '../lib/brands';
 import { SHARE_DECIMALS } from '../lib/vaults';
@@ -59,6 +60,8 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
   // Keep the dialog open while a transaction is in flight.
   const close = (open: boolean) => !open && !progress.busy && onClose(step === 'done');
   const isHub = chainKey === ChainKeys.SONIC_MAINNET;
+
+  useMarkPending(vault.name, progress.busy);
 
   useDoneToast(
     step === 'done',
