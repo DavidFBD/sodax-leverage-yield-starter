@@ -5,6 +5,7 @@ import { Hero } from '@/components/layout/Hero';
 import { MotionProvider } from '@/components/ui/motion';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { LeverageYieldPage } from '@/features/leverage-yield/LeverageYieldPage';
+import { ParodyNews } from '@/features/parody-news/ParodyNews';
 
 export function App() {
   return (
@@ -20,6 +21,7 @@ export function App() {
             </div>
           </main>
           <Footer />
+          <ParodyNews />
         </div>
       </TooltipProvider>
     </MotionProvider>

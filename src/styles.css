@@ -191,3 +191,13 @@
     animation: drop-out 150ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
+
+/* Parody news toast: the 10s countdown bar (paused on hover via animation-play-state). */
+@keyframes parody-news-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
