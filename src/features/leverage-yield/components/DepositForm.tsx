@@ -5,12 +5,18 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { OrbPanel, ThinkingOrb } from '@/components/ui/thinking-orb';
-import { DEFAULT_SOURCE_CHAIN, isSourceChain, NATIVE_GAS_RESERVE, type SourceChainKey } from '@/config/workshop';
+import {
+  DEFAULT_SOURCE_CHAIN,
+  isSourceChain,
+  NATIVE_GAS_RESERVE,
+  SOURCE_CHAINS,
+  type SourceChainKey,
+} from '@/config/workshop';
 import { chainName } from '@/lib/chains';
 import { formatTokenAmount, parseTokenAmount } from '@/lib/format';
 import { useEvmWallet } from '@/wallet';
 import { useDepositQuote } from '../hooks/useDepositQuote';
-import { useTokenBalance } from '../hooks/useTokenBalance';
+import { useSourceEligibility } from '../hooks/useSourceEligibility';
 import { useTokenChoice } from '../hooks/useTokenChoice';
 import { useVault, useVaults } from '../hooks/useVaults';
 import { ChainSelect } from './ChainSelect';
@@ -34,16 +40,30 @@ export function DepositForm({
   const vaults = useVaults();
   const vault = useVault(vaultName) ?? vaults[0];
 
-  // Source chain: the user's pick, else the wallet's current chain if allowed, else the default.
-  const { currentChainKey } = useEvmWallet();
+  // What the connected wallet can deposit from: one balances query per source network, shared and cached.
+  const { address, currentChainKey } = useEvmWallet();
+  const sources = useSourceEligibility(address);
+
+  // Source chain: the user's pick, else the wallet's current chain if allowed and it has gas, else the first
+  // network with gas, else the default.
   const [pickedChain, setPickedChain] = useState<SourceChainKey>();
-  const chainKey = pickedChain ?? (isSourceChain(currentChainKey) ? currentChainKey : DEFAULT_SOURCE_CHAIN);
+  const chainKey =
+    pickedChain ??
+    [isSourceChain(currentChainKey) ? currentChainKey : undefined, DEFAULT_SOURCE_CHAIN, ...SOURCE_CHAINS].find(
+      (key): key is SourceChainKey => !!key && sources.chains[key].eligible,
+    ) ??
+    (isSourceChain(currentChainKey) ? currentChainKey : DEFAULT_SOURCE_CHAIN);
   const wallet = useEvmWallet(chainKey);
-  const { tokens, token, pickToken } = useTokenChoice(chainKey);
+  const tokenOptions = sources.tokens(chainKey);
+  const { tokens, token, pickToken } = useTokenChoice(
+    chainKey,
+    t => tokenOptions.find(option => option.token.address === t.address)?.eligible ?? true,
+  );
 
   const [amountText, setAmountText] = useState('');
   const inputAmount = token ? parseTokenAmount(amountText, token.decimals) : undefined;
-  const { balance, isLoading: balanceLoading } = useTokenBalance(chainKey, token, wallet.address);
+  const balance = sources.balance(chainKey, token);
+  const balanceLoading = sources.isLoading(chainKey);
 
   // Inputs the user is reviewing. While the dialog is open it quotes them itself, so the form stops quoting.
   const [review, setReview] = useState<DepositReview | null>(null);
@@ -92,11 +112,20 @@ export function DepositForm({
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-2">
               <span className="text-sm font-medium">From network</span>
-              <ChainSelect value={chainKey} onChange={setPickedChain} />
+              <ChainSelect
+                value={chainKey}
+                options={sources.active ? sources.chains : undefined}
+                onChange={setPickedChain}
+              />
             </div>
             <div className="flex flex-col gap-2">
               <span className="text-sm font-medium">Pay with</span>
-              <TokenSelect tokens={tokens} value={token.address} onChange={pickToken} />
+              <TokenSelect
+                tokens={tokens}
+                options={sources.active ? tokenOptions : undefined}
+                value={token.address}
+                onChange={pickToken}
+              />
             </div>
           </div>
 

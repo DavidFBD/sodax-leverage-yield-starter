@@ -26,6 +26,16 @@ export const NATIVE_GAS_RESERVE: Record<SourceChainKey, bigint> = {
   [ChainKeys.SONIC_MAINNET]: parseUnits('1', 18),
 };
 
+/**
+ * Native gas (ETH / S) a wallet must hold on a network before its tokens are offered as a deposit source. Enough
+ * for an approval plus the deposit; smaller than NATIVE_GAS_RESERVE, which is what a native deposit leaves behind.
+ */
+export const MIN_GAS_BALANCE: Record<SourceChainKey, bigint> = {
+  [ChainKeys.BASE_MAINNET]: parseUnits('0.00005', 18),
+  [ChainKeys.ARBITRUM_MAINNET]: parseUnits('0.00005', 18),
+  [ChainKeys.SONIC_MAINNET]: parseUnits('0.1', 18),
+};
+
 /** Vault `name` as returned by `sodax.leverageYield.listVaults()`. */
 export const DEFAULT_VAULT_NAME = 'lsodaSUSDS';
 

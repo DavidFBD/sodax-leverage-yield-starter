@@ -1,6 +1,6 @@
 import { CaretDownIcon, CheckIcon } from '@phosphor-icons/react';
 import * as SelectPrimitive from '@radix-ui/react-select';
-import type { ComponentProps } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 export const Select = SelectPrimitive.Root;
@@ -47,7 +47,15 @@ export function SelectContent({
   );
 }
 
-export function SelectItem({ className, children, ...props }: ComponentProps<typeof SelectPrimitive.Item>) {
+export function SelectItem({
+  className,
+  children,
+  aside,
+  ...props
+}: ComponentProps<typeof SelectPrimitive.Item> & {
+  /** Shown at the right of the option only, not in the trigger (a balance, a reason it's disabled). */
+  aside?: ReactNode;
+}) {
   return (
     <SelectPrimitive.Item
       className={cn(
@@ -57,6 +65,7 @@ export function SelectItem({ className, children, ...props }: ComponentProps<typ
       {...props}
     >
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+      {aside && <span className="ml-auto flex items-center gap-2 pl-4 text-xs text-subtle-foreground">{aside}</span>}
       <SelectPrimitive.ItemIndicator className="absolute right-2">
         <CheckIcon weight="duotone" className="size-4" />
       </SelectPrimitive.ItemIndicator>
