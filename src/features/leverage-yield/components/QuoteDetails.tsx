@@ -1,4 +1,5 @@
 import type { LeverageYieldVault, XToken } from '@sodax/types';
+import { InfoTip } from '@/components/ui/info-tip';
 import { Flash } from '@/components/ui/motion';
 import { DEFAULT_SLIPPAGE_BPS } from '@/config/workshop';
 import { formatBps, formatTokenAmount } from '@/lib/format';
@@ -41,11 +42,21 @@ export function QuoteDetails({
           </dd>
         </>
       )}
-      <dt className="text-muted-foreground">Minimum received</dt>
+      <dt className="flex items-center gap-1 text-muted-foreground">
+        Minimum received
+        <InfoTip label="About the minimum">
+          If the fill would give you fewer shares than this, it does not go through and your funds stay with you.
+        </InfoTip>
+      </dt>
       <dd className="text-right">
         <Flash value={`${formatTokenAmount(minShares, SHARE_DECIMALS)} shares`} />
       </dd>
-      <dt className="text-muted-foreground">Max slippage</dt>
+      <dt className="flex items-center gap-1 text-muted-foreground">
+        Max slippage
+        <InfoTip label="About slippage">
+          How far the result may move from this quote before the minimum above applies.
+        </InfoTip>
+      </dt>
       <dd className="text-right">{formatBps(DEFAULT_SLIPPAGE_BPS)}</dd>
     </dl>
   );

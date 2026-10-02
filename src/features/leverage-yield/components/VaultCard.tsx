@@ -1,4 +1,4 @@
-import { CaretDownIcon, InfoIcon } from '@phosphor-icons/react';
+import { InfoIcon } from '@phosphor-icons/react';
 import {
   useLeverageYieldEffectiveApr,
   useLeverageYieldPosition,
@@ -7,11 +7,11 @@ import {
 } from '@sodax/dapp-kit';
 import type { LeverageYieldVault } from '@sodax/types';
 import { AnimatePresence, m } from 'motion/react';
-import { type ReactNode, useId, useState } from 'react';
+import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { SLOW } from '@/components/ui/motion';
+import { Disclosure } from '@/components/ui/disclosure';
 import { ThinkingOrb } from '@/components/ui/thinking-orb';
 import { Tooltip } from '@/components/ui/tooltip';
 import { SOURCE_CHAINS } from '@/config/workshop';
@@ -40,8 +40,6 @@ export function VaultCard({
   const { data: tvl } = useLeverageYieldTotalAssets({ params: { vault: vault.vault } });
   const sharePrice = useSharePrice(vault.vault);
   const { data: position } = useLeverageYieldPosition({ params: { vault: vault.vault } });
-  const [detailsOpen, setDetailsOpen] = useState(false);
-  const detailsId = useId();
 
   // Deposits from each chain land in a different hub wallet, so sum across all source chains.
   const balances = useLeverageYieldShareBalances({
@@ -116,45 +114,20 @@ export function VaultCard({
         )}
 
         <div className="mt-auto">
-          <button
-            type="button"
-            aria-expanded={detailsOpen}
-            aria-controls={detailsId}
-            onClick={() => setDetailsOpen(open => !open)}
-            className="inline-flex items-center gap-1 rounded-sm text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Details
-            <CaretDownIcon
-              weight="duotone"
-              className="size-3.5 transition-transform duration-200 ease-out"
-              style={{ transform: detailsOpen ? 'rotate(180deg)' : undefined }}
-            />
-          </button>
-          <AnimatePresence initial={false}>
-            {detailsOpen && (
-              <m.div
-                id={detailsId}
-                style={{ overflow: 'hidden' }}
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={SLOW}
-              >
-                <dl className="grid grid-cols-2 gap-x-3 gap-y-2 pt-3 text-sm">
-                  <Stat
-                    label="Share price"
-                    value={sharePrice !== undefined && `${formatTokenAmount(sharePrice, decimals)} ${brand.ticker}`}
-                  />
-                  <Stat label="Leverage" value={apr && `${formatWad(apr.leverageMultiplierWad)}×`} />
-                  <Stat
-                    label="Health / LTV"
-                    value={position && `${formatWad(position.healthFactor)} / ${formatBps(position.ltv)}`}
-                    className="col-span-2"
-                  />
-                </dl>
-              </m.div>
-            )}
-          </AnimatePresence>
+          <Disclosure>
+            <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
+              <Stat
+                label="Share price"
+                value={sharePrice !== undefined && `${formatTokenAmount(sharePrice, decimals)} ${brand.ticker}`}
+              />
+              <Stat label="Leverage" value={apr && `${formatWad(apr.leverageMultiplierWad)}×`} />
+              <Stat
+                label="Health / LTV"
+                value={position && `${formatWad(position.healthFactor)} / ${formatBps(position.ltv)}`}
+                className="col-span-2"
+              />
+            </dl>
+          </Disclosure>
         </div>
       </CardContent>
 

@@ -1,5 +1,6 @@
 import type { LeverageYieldVault } from '@sodax/types';
 import { m } from 'motion/react';
+import { InfoTip } from '@/components/ui/info-tip';
 import { BASE } from '@/components/ui/motion';
 import { VaultCard } from './VaultCard';
 
@@ -16,12 +17,13 @@ export function VaultGrid({
 }) {
   return (
     <section className="flex flex-col gap-4">
-      <div>
-        <h2 className="text-2xl font-semibold">Vaults</h2>
-        <p className="text-sm text-muted-foreground">
-          Each vault holds a liquid staking token, borrows against it and re-stakes, earning a levered staking yield.
-        </p>
-      </div>
+      <h2 className="flex items-center gap-2 text-2xl font-semibold">
+        Vaults
+        <InfoTip label="How vaults work">
+          Each vault holds a liquid staking token, borrows against it and re-stakes it, which multiplies the staking
+          yield and the risk. The APR is variable and can turn negative.
+        </InfoTip>
+      </h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Staggered fade and rise on first mount only; a 2px lift on hover. */}
         {vaults.map((vault, index) => (

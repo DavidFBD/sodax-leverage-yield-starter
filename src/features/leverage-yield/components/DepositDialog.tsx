@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Disclosure } from '@/components/ui/disclosure';
+import { InfoTip } from '@/components/ui/info-tip';
 import { Reveal } from '@/components/ui/motion';
 import { OrbPanel } from '@/components/ui/thinking-orb';
 import type { SourceChainKey } from '@/config/workshop';
@@ -84,10 +86,13 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
                 <OrbPanel className="h-32">Getting a live quote</OrbPanel>
               )}
             </Reveal>
-            <Callout>
-              You will sign {isNativeToken(chainKey, token) ? 'one transaction' : 'up to two transactions'} on{' '}
-              {chainName(chainKey)}. After that, solvers fill the deposit, usually within a minute or two. Shares go to
-              your SODAX hub wallet on Sonic.
+            <Callout className="flex items-center gap-1">
+              You sign {isNativeToken(chainKey, token) ? 'one transaction' : 'up to two transactions'} on{' '}
+              {chainName(chainKey)}.
+              <InfoTip label="What happens next">
+                After you sign, solvers fill the deposit, usually within a minute or two, and your shares arrive in your
+                own SODAX hub wallet on Sonic.
+              </InfoTip>
             </Callout>
             {isWrongChain ? (
               <Button size="lg" onClick={switchChain}>
@@ -134,10 +139,7 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
 
             {step === 'processing' &&
               (progress.timedOut ? (
-                <Callout>
-                  Still processing after 5 minutes. It may yet complete: check the explorer link above. You can close
-                  this window.
-                </Callout>
+                <Callout>Still processing after 5 minutes. Check the explorer link above; you can close this.</Callout>
               ) : (
                 <p className="text-xs text-muted-foreground">
                   Keep this window open. This usually takes under two minutes.
@@ -147,10 +149,12 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
             {step === 'error' && (
               <Callout variant="destructive">
                 <p className="font-semibold">Deposit not completed</p>
-                <p className="mt-1 break-words">{progress.error}</p>
                 {state.srcTxHash && (
                   <p className="mt-1">Your transaction was sent. Check its status before retrying.</p>
                 )}
+                <Disclosure className="mt-1">
+                  <p className="break-words">{progress.error}</p>
+                </Disclosure>
               </Callout>
             )}
 

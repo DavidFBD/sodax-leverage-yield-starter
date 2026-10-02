@@ -5,6 +5,8 @@ import { formatUnits } from 'viem';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Disclosure } from '@/components/ui/disclosure';
+import { InfoTip } from '@/components/ui/info-tip';
 import { Input } from '@/components/ui/input';
 import { Flash, Reveal } from '@/components/ui/motion';
 import { OrbPanel } from '@/components/ui/thinking-orb';
@@ -79,9 +81,12 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
           <DialogTitle>
             {step === 'done' ? 'Withdrawal complete' : `Withdraw from ${vaultBrand(vault).name}`}
           </DialogTitle>
-          <DialogDescription>
-            Shares held under {chainName(chainKey)}. You sign on {chainName(chainKey)}; funds arrive on the network you
-            choose.
+          <DialogDescription className="flex items-center gap-1">
+            You sign on {chainName(chainKey)}
+            <InfoTip label="How a withdrawal works">
+              These shares belong to deposits from {chainName(chainKey)}, so you sign there. Solvers then deliver the
+              token you pick to the network you choose.
+            </InfoTip>
           </DialogDescription>
         </DialogHeader>
 
@@ -187,10 +192,7 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
             />
             {step === 'processing' &&
               (progress.timedOut ? (
-                <Callout>
-                  Still processing after 5 minutes. It may yet complete: check the explorer link above. You can close
-                  this window.
-                </Callout>
+                <Callout>Still processing after 5 minutes. Check the explorer link above; you can close this.</Callout>
               ) : (
                 <p className="text-xs text-muted-foreground">
                   Keep this window open. This usually takes under two minutes.
@@ -199,7 +201,9 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
             {step === 'error' && (
               <Callout variant="destructive">
                 <p className="font-semibold">Withdrawal not completed</p>
-                <p className="mt-1 break-words">{progress.error}</p>
+                <Disclosure className="mt-1">
+                  <p className="break-words">{progress.error}</p>
+                </Disclosure>
               </Callout>
             )}
             {step === 'done' && (

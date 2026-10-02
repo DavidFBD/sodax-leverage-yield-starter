@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { formatUnits } from 'viem';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { InfoTip } from '@/components/ui/info-tip';
 import { Input } from '@/components/ui/input';
 import { Reveal } from '@/components/ui/motion';
 import { OrbPanel, ThinkingOrb } from '@/components/ui/thinking-orb';
@@ -25,7 +26,7 @@ import { DepositDialog, type DepositReview } from './DepositDialog';
 import { PositionCard } from './PositionCard';
 import { QuoteDetails } from './QuoteDetails';
 import { QuoteError } from './QuoteError';
-import { RiskNotice } from './RiskNotice';
+import { RiskNotice, useRiskAcknowledgement } from './RiskNotice';
 import { TokenSelect } from './TokenSelect';
 import { VaultApr } from './VaultApr';
 import { VaultPicker } from './VaultPicker';
@@ -62,6 +63,7 @@ export function DepositForm({
   );
 
   const [amountText, setAmountText] = useState('');
+  const [riskAcknowledged, setRiskAcknowledged] = useRiskAcknowledgement();
   const inputAmount = token ? parseTokenAmount(amountText, token.decimals) : undefined;
   const balance = sources.balance(chainKey, token);
   const balanceLoading = sources.isLoading(chainKey);
@@ -88,6 +90,7 @@ export function DepositForm({
     if (!vault || !token || quote.error || quote.amountOut === undefined || quote.minAmountOut === undefined) {
       return { label: 'No quote', disabled: true };
     }
+    if (!riskAcknowledged) return { label: 'Tick "I understand the risks" to continue', disabled: true };
     const reviewed = { vault, token, chainKey, inputAmount };
     return { label: 'Review deposit', onClick: () => setReview(reviewed) };
   })();
@@ -104,7 +107,13 @@ export function DepositForm({
         <CardContent className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium">Vault</span>
+              <span className="flex items-center gap-1 font-medium">
+                Vault
+                <InfoTip label="Where your shares live">
+                  Vaults live on Sonic. Whichever network you pay from, your shares go to your own SODAX hub wallet
+                  there, which only your wallet controls.
+                </InfoTip>
+              </span>
               <VaultApr vault={vault.vault} className="font-semibold text-foreground" />
             </div>
             <VaultPicker vaults={vaults} value={vault.name} onChange={onVaultChange} />
@@ -132,9 +141,15 @@ export function DepositForm({
 
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between text-sm">
-              <label htmlFor="deposit-amount" className="font-medium">
-                Amount
-              </label>
+              <span className="flex items-center gap-1">
+                <label htmlFor="deposit-amount" className="font-medium">
+                  Amount
+                </label>
+                <InfoTip label="About gas">
+                  You pay a little native gas (ETH on Base and Arbitrum, S on Sonic) for the approval and the deposit.
+                  When you deposit the native token itself, some is kept back for gas.
+                </InfoTip>
+              </span>
               {wallet.isConnected && (
                 <span className="text-muted-foreground">
                   Balance:{' '}
@@ -195,7 +210,7 @@ export function DepositForm({
             ) : null}
           </Reveal>
 
-          <RiskNotice />
+          <RiskNotice acknowledged={riskAcknowledged} onAcknowledge={setRiskAcknowledged} />
 
           <div className="flex flex-col gap-2">
             <Button size="lg" disabled={action.disabled} busy={action.busy} onClick={action.onClick}>

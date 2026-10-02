@@ -3,6 +3,7 @@ import { ChainKeys, type LeverageYieldVault } from '@sodax/types';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { InfoTip } from '@/components/ui/info-tip';
 import { useTweenedBigint } from '@/components/ui/motion';
 import { OrbPanel } from '@/components/ui/thinking-orb';
 import type { SourceChainKey } from '@/config/workshop';
@@ -76,7 +77,11 @@ export function PositionCard({
               >
                 {shortenAddress(holding.holder)}
               </a>{' '}
-              on Sonic. It won't show in your wallet app.
+              on Sonic{' '}
+              <InfoTip label="Why your wallet app doesn't show these">
+                Your shares sit in your own SODAX hub wallet on Sonic, which only your wallet controls. They won't
+                appear in your wallet app; this card shows them.
+              </InfoTip>
             </p>
             {holding.shares > 0n && (
               <Button variant="outline" onClick={() => setWithdrawOpen(true)}>
