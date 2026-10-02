@@ -23,6 +23,9 @@ importers:
       '@fontsource/shrikhand':
         specifier: 5.2.8
         version: 5.2.8
+      '@phosphor-icons/react':
+        specifier: 2.1.10
+        version: 2.1.10(react-dom@19.1.4(react@19.1.4))(react@19.1.4)
       '@radix-ui/react-dialog':
         specifier: 1.1.15
         version: 1.1.15(@types/react-dom@19.1.9(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.4(react@19.1.4))(react@19.1.4)
@@ -62,9 +65,6 @@ importers:
       clsx:
         specifier: 2.1.1
         version: 2.1.1
-      lucide-react:
-        specifier: 0.456.0
-        version: 0.456.0(react@19.1.4)
       react:
         specifier: 19.1.4
         version: 19.1.4
@@ -1260,6 +1260,13 @@ packages:
 
   '@pedrouid/environment@1.0.1':
     resolution: {integrity: sha512-HaW78NszGzRZd9SeoI3JD11JqY+lubnaOx7Pewj5pfjqWXOEATpeKIFb9Z4t2WBUK2iryiXX3lzWwmYWgUL0Ug==}
+
+  '@phosphor-icons/react@2.1.10':
+    resolution: {integrity: sha512-vt8Tvq8GLjheAZZYa+YG/pW7HDbov8El/MANW8pOAz4eGxrwhnbfrQZq0Cp4q8zBEu8NIhHdnr+r8thnfRSNYA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: 19.1.4
+      react-dom: 19.1.4
 
   '@protobuf-ts/grpcweb-transport@2.11.1':
     resolution: {integrity: sha512-1W4utDdvOB+RHMFQ0soL4JdnxjXV+ddeGIUg08DvZrA8Ms6k5NN6GBFU2oHZdTOcJVpPrDJ02RJlqtaoCMNBtw==}
@@ -4801,11 +4808,6 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-react@0.456.0:
-    resolution: {integrity: sha512-DIIGJqTT5X05sbAsQ+OhA8OtJYyD4NsEMCA/HQW/Y6ToPQ7gwbtujIoeAaup4HpHzV35SQOarKAWH8LYglB6eA==}
-    peerDependencies:
-      react: 19.1.4
-
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
@@ -7974,6 +7976,11 @@ snapshots:
   '@paulmillr/qr@0.2.1': {}
 
   '@pedrouid/environment@1.0.1': {}
+
+  '@phosphor-icons/react@2.1.10(react-dom@19.1.4(react@19.1.4))(react@19.1.4)':
+    dependencies:
+      react: 19.1.4
+      react-dom: 19.1.4(react@19.1.4)
 
   '@protobuf-ts/grpcweb-transport@2.11.1':
     dependencies:
@@ -13241,10 +13248,6 @@ snapshots:
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
-
-  lucide-react@0.456.0(react@19.1.4):
-    dependencies:
-      react: 19.1.4
 
   magic-string@0.30.21:
     dependencies:

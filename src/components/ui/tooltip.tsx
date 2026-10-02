@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 export const TooltipProvider = TooltipPrimitive.Provider;
 
-/** Simple tooltip: <Tooltip content="Explanation"><InfoIcon /></Tooltip> */
+/** Simple tooltip: <Tooltip content="Explanation"><InfoIcon weight="duotone" /></Tooltip> */
 export function Tooltip({
   content,
   children,

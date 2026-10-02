@@ -1,4 +1,4 @@
-import { CheckIcon, Loader2Icon, XIcon } from 'lucide-react';
+import { CheckIcon, CircleNotchIcon, XIcon } from '@phosphor-icons/react';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -18,9 +18,9 @@ export function Stepper({ steps }: { steps: { label: string; status: StepStatus;
               (step.status === 'pending' || step.status === 'skipped') && 'text-subtle-foreground',
             )}
           >
-            {step.status === 'done' && <CheckIcon className="size-3.5" />}
-            {step.status === 'active' && <Loader2Icon className="size-3.5 animate-spin" />}
-            {step.status === 'error' && <XIcon className="size-3.5" />}
+            {step.status === 'done' && <CheckIcon weight="duotone" className="size-3.5" />}
+            {step.status === 'active' && <CircleNotchIcon weight="duotone" className="size-3.5 animate-spin" />}
+            {step.status === 'error' && <XIcon weight="duotone" className="size-3.5" />}
           </span>
           <div className="flex flex-col">
             <span

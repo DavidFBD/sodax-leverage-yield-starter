@@ -1,5 +1,5 @@
+import { CheckCircleIcon, CircleNotchIcon } from '@phosphor-icons/react';
 import { sortConnectors, useWalletModal, useXAccount, useXConnectors, type XConnector } from '@sodax/wallet-sdk-react';
-import { CheckCircle2Icon, Loader2Icon } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
@@ -39,7 +39,7 @@ export function WalletModal() {
         <DialogHeader>
           <DialogTitle>{state.kind === 'success' ? 'Connected' : 'Connect a wallet'}</DialogTitle>
           <DialogDescription>
-            EVM wallets only. Use a wallet you funded for this workshop — transactions use real mainnet funds.
+            EVM wallets only. Use a wallet you funded for this workshop, because transactions use real mainnet funds.
           </DialogDescription>
         </DialogHeader>
 
@@ -47,7 +47,7 @@ export function WalletModal() {
 
         {state.kind === 'connecting' && (
           <div className="flex flex-col items-center gap-3 py-6 text-center">
-            <Loader2Icon className="size-8 animate-spin text-primary" />
+            <CircleNotchIcon weight="duotone" className="size-8 animate-spin text-primary" />
             <p className="text-sm">
               Approve the connection in <span className="font-semibold">{state.connector.name}</span>.
             </p>
@@ -76,7 +76,7 @@ export function WalletModal() {
 
         {state.kind === 'success' && (
           <div className="flex flex-col items-center gap-2 py-4 text-center">
-            <CheckCircle2Icon className="size-8 text-success" />
+            <CheckCircleIcon weight="duotone" className="size-8 text-success" />
             <p className="font-mono text-sm">{shortenAddress(state.account.address)}</p>
           </div>
         )}

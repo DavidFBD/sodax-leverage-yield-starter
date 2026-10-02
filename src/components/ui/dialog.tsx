@@ -1,5 +1,5 @@
+import { XIcon } from '@phosphor-icons/react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { XIcon } from 'lucide-react';
 import type { ComponentProps } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -20,7 +20,7 @@ export function DialogContent({ className, children, ...props }: ComponentProps<
       >
         {children}
         <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full p-1 text-muted-foreground hover:bg-secondary hover:text-foreground">
-          <XIcon className="size-4" />
+          <XIcon weight="duotone" className="size-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>

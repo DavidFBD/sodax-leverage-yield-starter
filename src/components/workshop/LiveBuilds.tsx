@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from 'lucide-react';
+import { ArrowSquareOutIcon } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { LIVE_BUILDS } from './builds';
 
@@ -28,7 +28,7 @@ export function LiveBuilds({ from }: { from: number }) {
                 )}
               >
                 {build.label}
-                <ExternalLinkIcon className="size-3.5" />
+                <ArrowSquareOutIcon weight="duotone" className="size-3.5" />
               </a>
             </li>
           );

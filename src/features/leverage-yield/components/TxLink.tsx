@@ -1,5 +1,5 @@
+import { ArrowSquareOutIcon } from '@phosphor-icons/react';
 import type { ChainKey } from '@sodax/types';
-import { ExternalLinkIcon } from 'lucide-react';
 import { chainName, explorerTxUrl } from '@/lib/chains';
 import { shortenAddress } from '@/lib/format';
 
@@ -15,7 +15,7 @@ export function TxLink({ chainKey, hash }: { chainKey: ChainKey; hash: string })
       className="inline-flex items-center gap-1 text-primary hover:underline"
     >
       {text}
-      <ExternalLinkIcon className="size-3" />
+      <ArrowSquareOutIcon weight="duotone" className="size-3" />
     </a>
   );
 }

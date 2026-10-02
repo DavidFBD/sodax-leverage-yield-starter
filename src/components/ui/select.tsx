@@ -1,5 +1,5 @@
+import { CaretDownIcon, CheckIcon } from '@phosphor-icons/react';
 import * as SelectPrimitive from '@radix-ui/react-select';
-import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 import type { ComponentProps } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -18,7 +18,7 @@ export function SelectTrigger({ className, children, ...props }: ComponentProps<
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="size-4 text-muted-foreground" />
+        <CaretDownIcon weight="duotone" className="size-4 text-muted-foreground" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -58,7 +58,7 @@ export function SelectItem({ className, children, ...props }: ComponentProps<typ
     >
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator className="absolute right-2">
-        <CheckIcon className="size-4" />
+        <CheckIcon weight="duotone" className="size-4" />
       </SelectPrimitive.ItemIndicator>
     </SelectPrimitive.Item>
   );

@@ -1,5 +1,5 @@
+import { CheckCircleIcon } from '@phosphor-icons/react';
 import { ChainKeys, type LeverageYieldVault } from '@sodax/types';
-import { CheckCircle2Icon } from 'lucide-react';
 import { useState } from 'react';
 import { formatUnits } from 'viem';
 import { Button } from '@/components/ui/button';
@@ -185,7 +185,7 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
             {step === 'done' && (
               <Callout variant="success">
                 <p className="flex items-center gap-2 font-semibold">
-                  <CheckCircle2Icon className="size-4" /> Withdrawn
+                  <CheckCircleIcon weight="duotone" className="size-4" /> Withdrawn
                 </p>
                 <p className="mt-1 text-foreground">
                   {outputToken?.symbol} is on its way to your wallet on {chainName(dstChainKey)}.

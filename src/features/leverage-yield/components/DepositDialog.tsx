@@ -1,5 +1,5 @@
+import { CheckCircleIcon } from '@phosphor-icons/react';
 import { ChainKeys, isNativeToken, type LeverageYieldVault, type XToken } from '@sodax/types';
-import { CheckCircle2Icon } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
@@ -152,8 +152,8 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
             {step === 'done' && (
               <Callout variant="success">
                 <p className="flex items-center gap-2 font-semibold">
-                  <CheckCircle2Icon className="size-4" /> Deposited {formatTokenAmount(inputAmount, token.decimals)}{' '}
-                  {token.symbol}
+                  <CheckCircleIcon weight="duotone" className="size-4" /> Deposited{' '}
+                  {formatTokenAmount(inputAmount, token.decimals)} {token.symbol}
                 </p>
                 <p className="mt-1 text-foreground">
                   ≈ {formatTokenAmount(confirmedShares, SHARE_DECIMALS)} {vault.name} are now in your hub wallet. Your

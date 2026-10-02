@@ -1,3 +1,4 @@
+import { InfoIcon } from '@phosphor-icons/react';
 import {
   useLeverageYieldEffectiveApr,
   useLeverageYieldPosition,
@@ -5,7 +6,6 @@ import {
   useLeverageYieldTotalAssets,
 } from '@sodax/dapp-kit';
 import type { LeverageYieldVault } from '@sodax/types';
-import { InfoIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -61,14 +61,14 @@ export function VaultCard({
           {apr ? (
             <p className="text-3xl font-bold text-primary">{formatRayPercent(apr.effectiveNetAprRay)}</p>
           ) : aprError ? (
-            <p className="text-3xl font-bold text-subtle-foreground">–</p>
+            <p className="text-3xl font-bold text-subtle-foreground">-</p>
           ) : (
             <Skeleton className="h-9 w-24" />
           )}
           <p className="flex items-center gap-1 text-xs text-muted-foreground">
             Net APR
             <Tooltip content="Staking yield of the underlying asset plus the lending spread, multiplied by the vault's leverage. Variable; can turn negative.">
-              <InfoIcon className="size-3.5" />
+              <InfoIcon weight="duotone" className="size-3.5" />
             </Tooltip>
           </p>
         </div>
