@@ -66,7 +66,11 @@ export function useVaultDeposit() {
           walletProvider: withTxListener(walletProvider, hash => patch({ step: 'processing', srcTxHash: hash })),
         });
         if (!result.ok) throw result.error;
-        patch({ step: 'done', srcTxHash: result.value.intentDeliveryInfo.srcTxHash });
+        patch({
+          step: 'done',
+          srcTxHash: result.value.intentDeliveryInfo.srcTxHash,
+          hubTxHash: result.value.intentDeliveryInfo.dstTxHash || undefined,
+        });
       }),
     [sodax, buildDeposit, approve, vaultSwap, patch, run],
   );

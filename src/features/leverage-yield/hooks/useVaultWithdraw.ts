@@ -47,7 +47,11 @@ export function useVaultWithdraw() {
           walletProvider: withTxListener(input.walletProvider, hash => patch({ step: 'processing', srcTxHash: hash })),
         });
         if (!result.ok) throw result.error;
-        patch({ step: 'done', srcTxHash: result.value.intentDeliveryInfo.srcTxHash });
+        patch({
+          step: 'done',
+          srcTxHash: result.value.intentDeliveryInfo.srcTxHash,
+          hubTxHash: result.value.intentDeliveryInfo.dstTxHash || undefined,
+        });
       }),
     [buildWithdraw, vaultSwap, patch, run],
   );

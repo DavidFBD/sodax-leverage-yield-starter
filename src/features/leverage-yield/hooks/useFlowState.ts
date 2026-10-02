@@ -9,6 +9,8 @@ export type FlowState = {
   approveTxHash?: string;
   /** Source-chain intent tx: known as soon as the user signs. Drives status polling. */
   srcTxHash?: string;
+  /** Sonic (hub) tx that delivered the intent, when the SDK reports it. Otherwise read from the relay. */
+  hubTxHash?: string;
   error?: string;
   /** The step that was running when the flow failed. */
   failedStep?: FlowStep;

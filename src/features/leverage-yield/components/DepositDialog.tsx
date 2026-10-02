@@ -13,6 +13,7 @@ import { chainName } from '@/lib/chains';
 import { formatTokenAmount } from '@/lib/format';
 import { useEvmWallet } from '@/wallet';
 import { useDepositQuote } from '../hooks/useDepositQuote';
+import { useDoneToast } from '../hooks/useDoneToast';
 import { useFlowProgress } from '../hooks/useFlowProgress';
 import { useVaultDeposit } from '../hooks/useVaultDeposit';
 import { vaultBrand } from '../lib/brands';
@@ -38,7 +39,7 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
   const { address, walletProvider, isWrongChain, switchChain } = useEvmWallet(chainKey);
   const [confirmedShares, setConfirmedShares] = useState<bigint>();
   const { state, deposit } = useVaultDeposit();
-  const progress = useFlowProgress(state, chainKey, true);
+  const progress = useFlowProgress(state, chainKey, !isNativeToken(chainKey, token));
   const { step } = progress;
   // Live quote for the frozen inputs, only while the user can (re)confirm; it stops once the flow starts.
   const quote = useDepositQuote({
@@ -58,6 +59,16 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
   // Keep the dialog open while a transaction is in flight.
   const close = (open: boolean) => !open && !progress.busy && onClose(step === 'done');
   const isHub = chainKey === ChainKeys.SONIC_MAINNET;
+
+  useDoneToast(
+    step === 'done',
+    `Deposited into ${vaultBrand(vault).name}`,
+    <>
+      {state.srcTxHash && <TxLink chainKey={chainKey} hash={state.srcTxHash} />}
+      {progress.hubTxHash && !isHub && <TxLink chainKey={ChainKeys.SONIC_MAINNET} hash={progress.hubTxHash} />}
+      {progress.fillTxHash && <TxLink chainKey={ChainKeys.SONIC_MAINNET} hash={progress.fillTxHash} />}
+    </>,
+  );
 
   return (
     <Dialog open onOpenChange={close}>
@@ -124,8 +135,14 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
                   detail: state.srcTxHash && <TxLink chainKey={chainKey} hash={state.srcTxHash} />,
                 },
                 {
-                  label: isHub ? 'Registering on Sonic' : `Delivering from ${chainName(chainKey)} to Sonic`,
+                  label:
+                    progress.rows.deliver === 'done'
+                      ? 'Delivered on Sonic'
+                      : isHub
+                        ? 'Registering on Sonic'
+                        : `Delivering from ${chainName(chainKey)} to Sonic`,
                   status: progress.rows.deliver,
+                  detail: progress.hubTxHash && <TxLink chainKey={ChainKeys.SONIC_MAINNET} hash={progress.hubTxHash} />,
                 },
                 {
                   label: 'Solver fills; shares arrive in your hub wallet',
@@ -164,9 +181,13 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
                   <CheckCircleIcon weight="duotone" className="size-4" /> Deposited{' '}
                   {formatTokenAmount(inputAmount, token.decimals)} {token.symbol}
                 </p>
-                <p className="mt-1 text-foreground">
-                  ≈ {formatTokenAmount(confirmedShares, SHARE_DECIMALS)} shares of {vault.name} are now in your hub
-                  wallet. Your position updates below.
+                <p className="mt-1 flex items-center gap-1 text-foreground">
+                  ≈ {formatTokenAmount(confirmedShares, SHARE_DECIMALS)} {vaultBrand(vault).name} shares are now in your
+                  hub wallet.
+                  <InfoTip label="About your hub wallet">
+                    Your shares sit in your own SODAX hub wallet on Sonic, which only your wallet controls. They won't
+                    appear in your wallet app; your position on this page shows them.
+                  </InfoTip>
                 </p>
               </Callout>
             )}

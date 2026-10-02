@@ -13,6 +13,7 @@ import { DEFAULT_SLIPPAGE_BPS, type SourceChainKey } from '@/config/workshop';
 import { chainName } from '@/lib/chains';
 import { formatBps, formatTokenAmount, parseTokenAmount } from '@/lib/format';
 import { useEvmWallet } from '@/wallet';
+import { useDoneToast } from '../hooks/useDoneToast';
 import { useFlowProgress } from '../hooks/useFlowProgress';
 import { useTokenChoice } from '../hooks/useTokenChoice';
 import { useVaultWithdraw } from '../hooks/useVaultWithdraw';
@@ -64,6 +65,18 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
   };
 
   const close = (open: boolean) => !open && !progress.busy && onClose();
+
+  useDoneToast(
+    step === 'done',
+    `Withdrawn from ${vaultBrand(vault).name}`,
+    <>
+      {state.srcTxHash && <TxLink chainKey={chainKey} hash={state.srcTxHash} />}
+      {progress.hubTxHash && chainKey !== ChainKeys.SONIC_MAINNET && (
+        <TxLink chainKey={ChainKeys.SONIC_MAINNET} hash={progress.hubTxHash} />
+      )}
+      {progress.fillTxHash && <TxLink chainKey={ChainKeys.SONIC_MAINNET} hash={progress.fillTxHash} />}
+    </>,
+  );
 
   const action = (() => {
     if (wallet.isWrongChain) return { label: `Switch to ${chainName(chainKey)}`, onClick: wallet.switchChain };
@@ -183,7 +196,11 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
                   status: progress.rows.sign,
                   detail: state.srcTxHash && <TxLink chainKey={chainKey} hash={state.srcTxHash} />,
                 },
-                { label: 'Delivering to Sonic', status: progress.rows.deliver },
+                {
+                  label: progress.rows.deliver === 'done' ? 'Delivered on Sonic' : 'Delivering to Sonic',
+                  status: progress.rows.deliver,
+                  detail: progress.hubTxHash && <TxLink chainKey={ChainKeys.SONIC_MAINNET} hash={progress.hubTxHash} />,
+                },
                 {
                   label: `Solver sends ${outputToken?.symbol ?? 'funds'} to ${chainName(dstChainKey)}`,
                   status: progress.rows.fill,

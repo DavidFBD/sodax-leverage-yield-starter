@@ -1,8 +1,9 @@
-import type { SpokeChainKey } from '@sodax/types';
+import { ChainKeys, type SpokeChainKey } from '@sodax/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { displayStep, isBusy, progressRows } from '../lib/progress';
 import type { FlowState } from './useFlowState';
+import { useHubTx } from './useHubTx';
 import { useIntentStatus } from './useIntentStatus';
 
 /** After this long in 'processing' the dialog becomes closable (the tx may still complete). */
@@ -15,6 +16,12 @@ const PROCESSING_TIMEOUT_MS = 5 * 60_000;
 export function useFlowProgress(state: FlowState, srcChainKey: SpokeChainKey, withApproval: boolean) {
   const status = useIntentStatus(srcChainKey, state.srcTxHash, !!state.handedOff);
   const step = displayStep(state, status.phase);
+  // A Sonic source is already on the hub: its own tx is the hub tx.
+  const hubTxHash = useHubTx(
+    srcChainKey,
+    state.srcTxHash,
+    srcChainKey === ChainKeys.SONIC_MAINNET ? state.srcTxHash : state.hubTxHash,
+  );
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -36,5 +43,6 @@ export function useFlowProgress(state: FlowState, srcChainKey: SpokeChainKey, wi
     rows: progressRows(state, status.phase, withApproval),
     error: state.error ?? status.message,
     fillTxHash: status.fillTxHash,
+    hubTxHash,
   };
 }
