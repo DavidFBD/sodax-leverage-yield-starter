@@ -1,4 +1,4 @@
-import { ChainKeys, type SpokeChainKey, spokeChainConfig, type XToken } from '@sodax/types';
+import { ChainKeys, isNativeToken, type SpokeChainKey, spokeChainConfig, type XToken } from '@sodax/types';
 import { parseUnits } from 'viem';
 
 /**
@@ -13,17 +13,27 @@ export const SOURCE_CHAINS = [
   ChainKeys.BASE_MAINNET,
   ChainKeys.ARBITRUM_MAINNET,
   ChainKeys.SONIC_MAINNET,
+  ChainKeys.OPTIMISM_MAINNET,
+  ChainKeys.POLYGON_MAINNET,
+  ChainKeys.BSC_MAINNET,
+  ChainKeys.AVALANCHE_MAINNET,
+  ChainKeys.HYPEREVM_MAINNET,
 ] as const satisfies readonly SpokeChainKey[];
 
 export type SourceChainKey = (typeof SOURCE_CHAINS)[number];
 
 export const DEFAULT_SOURCE_CHAIN: SourceChainKey = ChainKeys.BASE_MAINNET;
 
-/** Native token (ETH / S) to leave in the wallet for gas when depositing the native token itself. */
+/** Native token (ETH, S, POL, BNB, AVAX, HYPE) to leave in the wallet for gas when depositing the native token itself. */
 export const NATIVE_GAS_RESERVE: Record<SourceChainKey, bigint> = {
   [ChainKeys.BASE_MAINNET]: parseUnits('0.0005', 18),
   [ChainKeys.ARBITRUM_MAINNET]: parseUnits('0.0005', 18),
   [ChainKeys.SONIC_MAINNET]: parseUnits('1', 18),
+  [ChainKeys.OPTIMISM_MAINNET]: parseUnits('0.0005', 18),
+  [ChainKeys.POLYGON_MAINNET]: parseUnits('1', 18),
+  [ChainKeys.BSC_MAINNET]: parseUnits('0.002', 18),
+  [ChainKeys.AVALANCHE_MAINNET]: parseUnits('0.05', 18),
+  [ChainKeys.HYPEREVM_MAINNET]: parseUnits('0.02', 18),
 };
 
 /**
@@ -34,6 +44,11 @@ export const MIN_GAS_BALANCE: Record<SourceChainKey, bigint> = {
   [ChainKeys.BASE_MAINNET]: parseUnits('0.00005', 18),
   [ChainKeys.ARBITRUM_MAINNET]: parseUnits('0.00005', 18),
   [ChainKeys.SONIC_MAINNET]: parseUnits('0.1', 18),
+  [ChainKeys.OPTIMISM_MAINNET]: parseUnits('0.00005', 18),
+  [ChainKeys.POLYGON_MAINNET]: parseUnits('0.1', 18),
+  [ChainKeys.BSC_MAINNET]: parseUnits('0.0003', 18),
+  [ChainKeys.AVALANCHE_MAINNET]: parseUnits('0.005', 18),
+  [ChainKeys.HYPEREVM_MAINNET]: parseUnits('0.002', 18),
 };
 
 /** Share of the wallet balance the deposit form's Max chip fills: headroom for gas and rounding. */
@@ -75,6 +90,11 @@ export function getDepositTokens(chainKey: SpokeChainKey): XToken[] {
   return supportedTokenEntries(chainKey)
     .filter(([key]) => allowed.has(key))
     .map(([, token]) => token);
+}
+
+/** The network's native gas token (ETH, S, POL, BNB, AVAX, HYPE), whether or not it is offered as a deposit token. */
+export function getNativeToken(chainKey: SpokeChainKey): XToken | undefined {
+  return supportedTokenEntries(chainKey).find(([, token]) => isNativeToken(chainKey, token))?.[1];
 }
 
 /** Resolve a token by its SDK config key, e.g. getTokenByKey(BASE, 'USDC') (native USDC on Arbitrum, not USDC.e). */

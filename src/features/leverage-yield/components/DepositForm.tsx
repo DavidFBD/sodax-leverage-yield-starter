@@ -154,8 +154,9 @@ export function DepositForm({
                   Amount
                 </label>
                 <InfoTip label="About gas">
-                  You pay a little native gas (ETH on Base and Arbitrum, S on Sonic) for the approval and the deposit.
-                  When you deposit the native token itself, some is kept back for gas.
+                  You pay a little native gas on the network you pay from (ETH on Base, S on Sonic, POL on Polygon, and
+                  so on) for the approval and the deposit. When you deposit the native token itself, some is kept back
+                  for gas.
                 </InfoTip>
               </span>
               {wallet.isConnected && (

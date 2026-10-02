@@ -4,6 +4,7 @@ import { useQueries } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import {
   getDepositTokens,
+  getNativeToken,
   MIN_GAS_BALANCE,
   NATIVE_GAS_RESERVE,
   REFETCH_MS,
@@ -16,6 +17,13 @@ import { chainName } from '@/lib/chains';
 export type Eligibility = { eligible: true; reason?: undefined } | { eligible: false; reason: string };
 
 const OK: Eligibility = { eligible: true };
+
+/** Deposit tokens plus the native gas token (POL, BNB, AVAX and HYPE are gas but not deposit tokens). */
+function sourceTokens(chainKey: SourceChainKey): XToken[] {
+  const tokens = getDepositTokens(chainKey);
+  const native = getNativeToken(chainKey);
+  return native && !tokens.some(token => token.address === native.address) ? [...tokens, native] : tokens;
+}
 
 export type TokenOption = { token: XToken; balance: bigint | undefined } & Eligibility;
 
@@ -42,7 +50,7 @@ export function useSourceEligibility(address: string | undefined): SourceEligibi
   const { sodax } = useSodaxContext();
   const results = useQueries({
     queries: SOURCE_CHAINS.map(chainKey => ({
-      ...getBalancesQueryOptions(sodax, { chainKey, tokens: getDepositTokens(chainKey), address }),
+      ...getBalancesQueryOptions(sodax, { chainKey, tokens: sourceTokens(chainKey), address }),
       refetchInterval: REFETCH_MS,
     })),
   });
@@ -62,7 +70,7 @@ export function useSourceEligibility(address: string | undefined): SourceEligibi
 
     const gasOf = (chainKey: SourceChainKey): bigint | undefined => {
       const balances = byChain.get(chainKey);
-      const native = getDepositTokens(chainKey).find(token => isNativeToken(chainKey, token));
+      const native = getNativeToken(chainKey);
       return balances && native ? (balances[native.address] ?? 0n) : undefined;
     };
 
