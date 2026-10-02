@@ -77,6 +77,9 @@ importers:
       tailwind-merge:
         specifier: 3.3.1
         version: 3.3.1
+      thinking-orbs:
+        specifier: 0.3.2
+        version: 0.3.2(react@19.1.4)
       viem:
         specifier: 2.29.2
         version: 2.29.2(bufferutil@4.1.0)(typescript@5.9.2)(utf-8-validate@6.0.6)(zod@3.22.4)
@@ -5742,6 +5745,11 @@ packages:
 
   text-encoding-utf-8@1.0.2:
     resolution: {integrity: sha512-8bw4MY9WjdsD2aMtO0OzOCY3pXGYNx2d2FfHRVUKkiCPDWjKuOlhLVASS+pD7VkLTVjW268LYJHwsnPFlBpbAg==}
+
+  thinking-orbs@0.3.2:
+    resolution: {integrity: sha512-QZFeBaPEzqhjiZoXy961EvDgaXk2WgXacF3Rbz+Sj5IfzDzBvTC86vdREUHniBffYibJFKSwbfllxLUdI/Xv6g==}
+    peerDependencies:
+      react: 19.1.4
 
   thread-stream@0.15.2:
     resolution: {integrity: sha512-UkEhKIg2pD+fjkHQKyJO3yoIvAP3N6RlNFt2dUhcS1FGvCD1cQa1M/PGknCLFIyZdtJOWQjejp7bdNqmN7zwdA==}
@@ -14433,6 +14441,10 @@ snapshots:
       source-map-support: 0.5.21
 
   text-encoding-utf-8@1.0.2: {}
+
+  thinking-orbs@0.3.2(react@19.1.4):
+    dependencies:
+      react: 19.1.4
 
   thread-stream@0.15.2:
     dependencies:

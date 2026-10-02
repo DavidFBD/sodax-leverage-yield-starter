@@ -10,7 +10,7 @@ import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ThinkingOrb } from '@/components/ui/thinking-orb';
 import { Tooltip } from '@/components/ui/tooltip';
 import { SOURCE_CHAINS } from '@/config/workshop';
 import { formatBps, formatRayPercent, formatTokenAmount, formatWad } from '@/lib/format';
@@ -63,7 +63,7 @@ export function VaultCard({
           ) : aprError ? (
             <p className="text-3xl font-bold text-subtle-foreground">-</p>
           ) : (
-            <Skeleton className="h-9 w-24" />
+            <ThinkingOrb state="breathing" size={32} label="Loading vault" />
           )}
           <p className="flex items-center gap-1 text-xs text-muted-foreground">
             Net APR
@@ -107,7 +107,9 @@ function Stat({ label, value, className }: { label: string; value: ReactNode; cl
   return (
     <div className={className}>
       <dt className="text-xs text-muted-foreground">{label}</dt>
-      <dd className="font-medium">{value || <Skeleton className="mt-1 h-4 w-16" />}</dd>
+      <dd className="font-medium">
+        {value || <ThinkingOrb state="breathing" size={20} className="mt-1" label="Loading" />}
+      </dd>
     </div>
   );
 }

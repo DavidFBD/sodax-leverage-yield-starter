@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
+import { OrbPanel } from '@/components/ui/thinking-orb';
 import { DEFAULT_SLIPPAGE_BPS, type SourceChainKey } from '@/config/workshop';
 import { chainName } from '@/lib/chains';
 import { formatBps, formatTokenAmount, parseTokenAmount } from '@/lib/format';
@@ -65,7 +65,7 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
     if (!sharesText) return { label: 'Enter an amount', disabled: true };
     if (!shares) return { label: 'Enter a valid amount', disabled: true };
     if (shares > shareBalance) return { label: 'More than your shares', disabled: true };
-    if (quote.isLoading) return { label: 'Getting quote…', disabled: true };
+    if (quote.isLoading) return { label: 'Getting quote…', disabled: true, busy: true };
     if (quote.error || !quote.minAmountOut) return { label: 'No quote', disabled: true };
     return { label: 'Confirm withdrawal', onClick: confirm };
   })();
@@ -126,7 +126,7 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
             {shares && quote.error ? (
               <QuoteError message={quote.error} onRetry={quote.refetch} />
             ) : shares && quote.isLoading ? (
-              <Skeleton className="h-24 w-full" />
+              <OrbPanel className="h-24">Getting a live quote</OrbPanel>
             ) : quote.amountOut !== undefined && quote.minAmountOut !== undefined && outputToken ? (
               <dl className="grid grid-cols-2 gap-y-2 rounded-md bg-secondary p-4 text-sm">
                 <dt className="text-muted-foreground">You receive (est.)</dt>
@@ -142,7 +142,7 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
               </dl>
             ) : null}
 
-            <Button size="lg" disabled={action.disabled} onClick={action.onClick}>
+            <Button size="lg" disabled={action.disabled} busy={action.busy} onClick={action.onClick}>
               {action.label}
             </Button>
           </div>

@@ -1,5 +1,6 @@
-import { CheckIcon, CircleNotchIcon, XIcon } from '@phosphor-icons/react';
+import { CheckIcon, XIcon } from '@phosphor-icons/react';
 import type { ReactNode } from 'react';
+import { ThinkingOrb } from '@/components/ui/thinking-orb';
 import { cn } from '@/lib/utils';
 
 export type StepStatus = 'pending' | 'active' | 'done' | 'skipped' | 'error';
@@ -19,7 +20,7 @@ export function Stepper({ steps }: { steps: { label: string; status: StepStatus;
             )}
           >
             {step.status === 'done' && <CheckIcon weight="duotone" className="size-3.5" />}
-            {step.status === 'active' && <CircleNotchIcon weight="duotone" className="size-3.5 animate-spin" />}
+            {step.status === 'active' && <ThinkingOrb state="connecting" size={20} decorative />}
             {step.status === 'error' && <XIcon weight="duotone" className="size-3.5" />}
           </span>
           <div className="flex flex-col">

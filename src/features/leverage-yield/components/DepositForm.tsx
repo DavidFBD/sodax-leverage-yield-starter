@@ -4,7 +4,7 @@ import { formatUnits } from 'viem';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
+import { OrbPanel, ThinkingOrb } from '@/components/ui/thinking-orb';
 import { DEFAULT_SOURCE_CHAIN, isSourceChain, NATIVE_GAS_RESERVE, type SourceChainKey } from '@/config/workshop';
 import { chainName } from '@/lib/chains';
 import { formatTokenAmount, parseTokenAmount } from '@/lib/format';
@@ -63,7 +63,7 @@ export function DepositForm({
       inputAmount > balance - NATIVE_GAS_RESERVE[chainKey]
     )
       return { label: `Leave some ${token.symbol} for gas`, disabled: true };
-    if (quote.isLoading) return { label: 'Getting quote…', disabled: true };
+    if (quote.isLoading) return { label: 'Getting quote…', disabled: true, busy: true };
     if (!vault || !token || quote.error || quote.amountOut === undefined || quote.minAmountOut === undefined) {
       return { label: 'No quote', disabled: true };
     }
@@ -109,7 +109,7 @@ export function DepositForm({
                 <span className="text-muted-foreground">
                   Balance:{' '}
                   {balanceLoading ? (
-                    <Skeleton className="inline-block h-3 w-12 align-middle" />
+                    <ThinkingOrb state="breathing" size={20} className="align-middle" label="Loading balance" />
                   ) : (
                     `${formatTokenAmount(balance, token.decimals)} ${token.symbol}`
                   )}
@@ -142,7 +142,7 @@ export function DepositForm({
           {inputAmount && quote.error ? (
             <QuoteError message={quote.error} onRetry={quote.refetch} />
           ) : inputAmount && quote.isLoading ? (
-            <Skeleton className="h-32 w-full" />
+            <OrbPanel className="h-32">Getting a live quote</OrbPanel>
           ) : inputAmount && quote.amountOut !== undefined && quote.minAmountOut !== undefined ? (
             <QuoteDetails
               vault={vault}
@@ -156,7 +156,7 @@ export function DepositForm({
           <RiskNotice />
 
           <div className="flex flex-col gap-2">
-            <Button size="lg" disabled={action.disabled} onClick={action.onClick}>
+            <Button size="lg" disabled={action.disabled} busy={action.busy} onClick={action.onClick}>
               {action.label}
             </Button>
           </div>

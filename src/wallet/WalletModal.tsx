@@ -1,9 +1,10 @@
-import { CheckCircleIcon, CircleNotchIcon } from '@phosphor-icons/react';
+import { CheckCircleIcon } from '@phosphor-icons/react';
 import { sortConnectors, useWalletModal, useXAccount, useXConnectors, type XConnector } from '@sodax/wallet-sdk-react';
 import { useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ThinkingOrb } from '@/components/ui/thinking-orb';
 import { shortenAddress } from '@/lib/format';
 
 /**
@@ -47,7 +48,7 @@ export function WalletModal() {
 
         {state.kind === 'connecting' && (
           <div className="flex flex-col items-center gap-3 py-6 text-center">
-            <CircleNotchIcon weight="duotone" className="size-8 animate-spin text-primary" />
+            <ThinkingOrb state="connecting" size={32} decorative />
             <p className="text-sm">
               Approve the connection in <span className="font-semibold">{state.connector.name}</span>.
             </p>

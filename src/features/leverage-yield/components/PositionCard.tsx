@@ -3,7 +3,7 @@ import { ChainKeys, type LeverageYieldVault } from '@sodax/types';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { OrbPanel } from '@/components/ui/thinking-orb';
 import type { SourceChainKey } from '@/config/workshop';
 import { chainName, explorerAddressUrl } from '@/lib/chains';
 import { formatTokenAmount, shortenAddress } from '@/lib/format';
@@ -46,7 +46,9 @@ export function PositionCard({
         {!address ? (
           <p className="text-sm text-muted-foreground">Connect a wallet to see your shares.</p>
         ) : !holding ? (
-          <Skeleton className="h-16 w-full" />
+          <OrbPanel state="breathing" className="py-4">
+            Loading your position
+          </OrbPanel>
         ) : (
           <>
             <div>

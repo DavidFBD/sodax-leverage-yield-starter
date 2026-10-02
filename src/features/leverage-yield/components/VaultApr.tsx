@@ -1,14 +1,14 @@
 import { useLeverageYieldEffectiveApr } from '@sodax/dapp-kit';
 import type { Address } from '@sodax/types';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ThinkingOrb } from '@/components/ui/thinking-orb';
 import { Tooltip } from '@/components/ui/tooltip';
 import { formatRayPercent } from '@/lib/format';
 
 /** Headline APR: `effectiveNetAprRay` (AAVE spread + LSD staking yield, levered). */
 export function VaultApr({ vault, className }: { vault: Address; className?: string }) {
   const { data: apr, isLoading, isError } = useLeverageYieldEffectiveApr({ params: { vault } });
-  if (isLoading) return <Skeleton className="h-5 w-14" />;
+  if (isLoading) return <ThinkingOrb state="breathing" size={20} label="Loading APR" />;
   if (isError || !apr) return <span className="text-subtle-foreground">APR n/a</span>;
   return (
     <span className={className}>

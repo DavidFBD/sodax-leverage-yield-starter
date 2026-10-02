@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Skeleton } from '@/components/ui/skeleton';
+import { OrbPanel } from '@/components/ui/thinking-orb';
 import type { SourceChainKey } from '@/config/workshop';
 import { chainName } from '@/lib/chains';
 import { formatTokenAmount } from '@/lib/format';
@@ -78,7 +78,7 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
                 minShares={quote.minAmountOut}
               />
             ) : (
-              <Skeleton className="h-32 w-full" />
+              <OrbPanel className="h-32">Getting a live quote</OrbPanel>
             )}
             <Callout>
               You will sign {isNativeToken(chainKey, token) ? 'one transaction' : 'up to two transactions'} on{' '}
@@ -93,6 +93,7 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
               <Button
                 size="lg"
                 disabled={!walletProvider || quote.minAmountOut === undefined || quote.isLoading || !!quote.error}
+                busy={quote.isLoading}
                 onClick={confirm}
               >
                 Confirm deposit
