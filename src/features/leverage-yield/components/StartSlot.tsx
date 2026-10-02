@@ -256,7 +256,7 @@ function FirstDepositNudge({
         </span>
         <div className="flex flex-col gap-2">
           <div>
-            <h2 className="text-lg font-semibold">Make your first deposit</h2>
+            <h2 className="text-lg font-semibold">Make your first universal deposit</h2>
             <p className="text-sm text-muted-foreground">
               Pick a vault, choose an amount, sign once. Takes about a minute.
             </p>

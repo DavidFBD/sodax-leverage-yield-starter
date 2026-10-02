@@ -4,7 +4,9 @@
  */
 export const brand = {
   appName: 'Leverage Yield',
-  tagline: 'Deposit from the network you already use, into one pooled vault.',
+  tagline: 'Deposit from the network you already use. No manual bridging, no new wallet.',
+  /** Small tag above the hero headline. */
+  eyebrow: 'Universal deposits',
   /** Background for the hero's info icon: how a deposit reaches the vault. */
   howItWorks:
     'You sign one deposit intent on your network. SODAX routes it to solvers, who fill it by delivering vault shares to your own hub wallet on Sonic.',

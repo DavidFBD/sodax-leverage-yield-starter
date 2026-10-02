@@ -23,6 +23,12 @@ export function VaultGrid({
           Each vault holds a liquid staking token, borrows against it and re-stakes it, which multiplies the staking
           yield and the risk. The APR is variable and can turn negative.
         </InfoTip>
+        <span className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
+          Built for builders
+          <InfoTip label="For builders">
+            Integrate once with the SODAX SDK and offer these vaults to your users on any supported network.
+          </InfoTip>
+        </span>
       </h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Staggered fade and rise on first mount only; a 2px lift on hover. */}
