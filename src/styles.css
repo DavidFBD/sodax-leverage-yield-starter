@@ -36,6 +36,10 @@
   --color-link: var(--link);
   --color-border-strong: var(--border-strong);
   --color-icon-muted: var(--icon-muted);
+  --color-wash-honey: var(--wash-honey);
+  --color-wash-linen: var(--wash-linen);
+  --color-wash-terracotta: var(--wash-terracotta);
+  --color-wash-wisteria: var(--wash-wisteria);
 
   /* 8px for cards, buttons, inputs and menus; 4px for badges. */
   --radius-sm: var(--radius-badge);

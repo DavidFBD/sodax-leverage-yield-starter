@@ -1,4 +1,4 @@
-import { InfoIcon } from '@phosphor-icons/react';
+import { CaretDownIcon, InfoIcon } from '@phosphor-icons/react';
 import {
   useLeverageYieldEffectiveApr,
   useLeverageYieldPosition,
@@ -7,18 +7,24 @@ import {
 } from '@sodax/dapp-kit';
 import type { LeverageYieldVault } from '@sodax/types';
 import { AnimatePresence, m } from 'motion/react';
-import type { ReactNode } from 'react';
+import { type ReactNode, useId, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { SLOW } from '@/components/ui/motion';
 import { ThinkingOrb } from '@/components/ui/thinking-orb';
 import { Tooltip } from '@/components/ui/tooltip';
 import { SOURCE_CHAINS } from '@/config/workshop';
 import { formatBps, formatRayPercent, formatTokenAmount, formatWad } from '@/lib/format';
 import { useSharePrice } from '../hooks/useShareValue';
-import { SHARE_DECIMALS, underlying, yieldSource } from '../lib/vaults';
+import { vaultBrand } from '../lib/brands';
+import { SHARE_DECIMALS, underlying } from '../lib/vaults';
+import { VaultIcon } from './VaultIcon';
 
-/** One vault: live APR, TVL, share price, leverage and health, plus the user's shares across source chains. */
+/**
+ * One vault, readable at a glance: icon, friendly name and ticker, the variable APR, how much it holds. Share price,
+ * leverage and health sit behind "Details" for the risk-aware reader. The user's shares show when connected.
+ */
 export function VaultCard({
   vault,
   address,
@@ -34,6 +40,8 @@ export function VaultCard({
   const { data: tvl } = useLeverageYieldTotalAssets({ params: { vault: vault.vault } });
   const sharePrice = useSharePrice(vault.vault);
   const { data: position } = useLeverageYieldPosition({ params: { vault: vault.vault } });
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const detailsId = useId();
 
   // Deposits from each chain land in a different hub wallet, so sum across all source chains.
   const balances = useLeverageYieldShareBalances({
@@ -43,7 +51,8 @@ export function VaultCard({
     },
   });
   const myShares = balances.reduce((sum, query) => sum + (query.data?.shares ?? 0n), 0n);
-  const { symbol, decimals } = underlying(vault);
+  const brand = vaultBrand(vault);
+  const { decimals } = underlying(vault);
 
   return (
     <Card className="relative flex w-full flex-col transition-shadow duration-200 ease-out hover:shadow-lg">
@@ -59,53 +68,96 @@ export function VaultCard({
           />
         )}
       </AnimatePresence>
-      <CardHeader className="pb-4">
+
+      <CardHeader className="gap-4 pb-4">
         <div className="flex items-start justify-between gap-2">
-          <div>
-            <CardTitle>{symbol}</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              {vault.name} · {yieldSource(vault)}
-            </p>
-          </div>
+          <VaultIcon vault={vault} />
           {apr?.lsdApr.stale && <Badge variant="muted">APR estimate</Badge>}
         </div>
-        <div className="pt-2">
+        <div className="flex flex-col gap-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <CardTitle>{brand.name}</CardTitle>
+            <Badge variant="muted">{brand.ticker}</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">{brand.tagline}</p>
+        </div>
+        <div>
           {apr ? (
-            <p className="text-3xl font-semibold text-foreground">{formatRayPercent(apr.effectiveNetAprRay)}</p>
+            <p className="text-4xl font-semibold text-foreground">{formatRayPercent(apr.effectiveNetAprRay)}</p>
           ) : aprError ? (
-            <p className="text-3xl font-semibold text-subtle-foreground">-</p>
+            <p className="text-4xl font-semibold text-subtle-foreground">-</p>
           ) : (
-            <ThinkingOrb state="breathing" size={32} label="Loading vault" />
+            <ThinkingOrb state="breathing" size={32} label="Loading APR" />
           )}
-          <p className="flex items-center gap-1 text-xs text-muted-foreground">
-            Net APR
+          <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+            Net APR, variable
             <Tooltip content="Staking yield of the underlying asset plus the lending spread, multiplied by the vault's leverage. Variable; can turn negative.">
               <InfoIcon weight="duotone" className="size-3.5" />
             </Tooltip>
           </p>
         </div>
       </CardHeader>
-      <CardContent className="flex-1">
-        <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
-          <Stat label="TVL" value={tvl !== undefined && `${formatTokenAmount(tvl, decimals, 2)} ${symbol}`} />
-          <Stat
-            label="Share price"
-            value={sharePrice !== undefined && `${formatTokenAmount(sharePrice, decimals)} ${symbol}`}
-          />
-          <Stat label="Leverage" value={apr && `${formatWad(apr.leverageMultiplierWad)}×`} />
-          <Stat
-            label="Health / LTV"
-            value={position && `${formatWad(position.healthFactor)} / ${formatBps(position.ltv)}`}
-          />
-          {address && (
-            <Stat
-              label="You hold"
-              value={`${formatTokenAmount(myShares, SHARE_DECIMALS)} shares`}
-              className="col-span-2"
-            />
+
+      <CardContent className="flex flex-1 flex-col gap-3">
+        <p className="text-sm">
+          {tvl !== undefined ? (
+            <>
+              Holds <span className="font-medium">{formatTokenAmount(tvl, decimals, 2)}</span> {brand.ticker} so far
+            </>
+          ) : (
+            <ThinkingOrb state="breathing" size={20} label="Loading vault size" />
           )}
-        </dl>
+        </p>
+        {address && (
+          <p className="text-sm text-muted-foreground">
+            You hold <span className="font-medium text-foreground">{formatTokenAmount(myShares, SHARE_DECIMALS)}</span>{' '}
+            shares
+          </p>
+        )}
+
+        <div className="mt-auto">
+          <button
+            type="button"
+            aria-expanded={detailsOpen}
+            aria-controls={detailsId}
+            onClick={() => setDetailsOpen(open => !open)}
+            className="inline-flex items-center gap-1 rounded-sm text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Details
+            <CaretDownIcon
+              weight="duotone"
+              className="size-3.5 transition-transform duration-200 ease-out"
+              style={{ transform: detailsOpen ? 'rotate(180deg)' : undefined }}
+            />
+          </button>
+          <AnimatePresence initial={false}>
+            {detailsOpen && (
+              <m.div
+                id={detailsId}
+                style={{ overflow: 'hidden' }}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={SLOW}
+              >
+                <dl className="grid grid-cols-2 gap-x-3 gap-y-2 pt-3 text-sm">
+                  <Stat
+                    label="Share price"
+                    value={sharePrice !== undefined && `${formatTokenAmount(sharePrice, decimals)} ${brand.ticker}`}
+                  />
+                  <Stat label="Leverage" value={apr && `${formatWad(apr.leverageMultiplierWad)}×`} />
+                  <Stat
+                    label="Health / LTV"
+                    value={position && `${formatWad(position.healthFactor)} / ${formatBps(position.ltv)}`}
+                    className="col-span-2"
+                  />
+                </dl>
+              </m.div>
+            )}
+          </AnimatePresence>
+        </div>
       </CardContent>
+
       <CardFooter>
         <Button className="w-full" variant={selected ? 'default' : 'outline'} onClick={onDeposit}>
           {selected ? 'Selected' : 'Deposit'}

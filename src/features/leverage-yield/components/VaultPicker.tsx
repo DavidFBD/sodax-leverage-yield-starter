@@ -1,7 +1,9 @@
 import type { LeverageYieldVault } from '@sodax/types';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { underlying, yieldSource } from '../lib/vaults';
+import { vaultBrand } from '../lib/brands';
 import { VaultApr } from './VaultApr';
+import { VaultIcon } from './VaultIcon';
 
 export function VaultPicker({
   vaults,
@@ -20,13 +22,11 @@ export function VaultPicker({
       <SelectContent>
         {vaults.map(vault => (
           <SelectItem key={vault.name} value={vault.name}>
-            <span className="flex flex-col">
-              <span className="font-semibold">
-                {vault.name} <span className="font-normal text-muted-foreground">· {underlying(vault).symbol}</span>
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {yieldSource(vault)} · <VaultApr vault={vault.vault} />
-              </span>
+            <VaultIcon vault={vault} size={24} />
+            <span className="font-medium">{vaultBrand(vault).name}</span>
+            <Badge variant="muted">{vaultBrand(vault).ticker}</Badge>
+            <span className="text-muted-foreground">
+              · <VaultApr vault={vault.vault} />
             </span>
           </SelectItem>
         ))}

@@ -16,6 +16,7 @@ import { useFlowProgress } from '../hooks/useFlowProgress';
 import { useTokenChoice } from '../hooks/useTokenChoice';
 import { useVaultWithdraw } from '../hooks/useVaultWithdraw';
 import { useWithdrawQuote } from '../hooks/useWithdrawQuote';
+import { vaultBrand } from '../lib/brands';
 import { SHARE_DECIMALS } from '../lib/vaults';
 import { ChainSelect } from './ChainSelect';
 import { QuoteError } from './QuoteError';
@@ -75,7 +76,9 @@ export function WithdrawDialog({ vault, chainKey, shareBalance, onClose }: Props
     <Dialog open onOpenChange={close}>
       <DialogContent onInteractOutside={event => progress.busy && event.preventDefault()}>
         <DialogHeader>
-          <DialogTitle>{step === 'done' ? 'Withdrawal complete' : `Withdraw from ${vault.name}`}</DialogTitle>
+          <DialogTitle>
+            {step === 'done' ? 'Withdrawal complete' : `Withdraw from ${vaultBrand(vault).name}`}
+          </DialogTitle>
           <DialogDescription>
             Shares held under {chainName(chainKey)}. You sign on {chainName(chainKey)}; funds arrive on the network you
             choose.

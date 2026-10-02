@@ -13,6 +13,7 @@ import { useEvmWallet } from '@/wallet';
 import { useDepositQuote } from '../hooks/useDepositQuote';
 import { useFlowProgress } from '../hooks/useFlowProgress';
 import { useVaultDeposit } from '../hooks/useVaultDeposit';
+import { vaultBrand } from '../lib/brands';
 import { SHARE_DECIMALS } from '../lib/vaults';
 import { QuoteDetails } from './QuoteDetails';
 import { QuoteError } from './QuoteError';
@@ -62,7 +63,7 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
         <DialogHeader>
           <DialogTitle>{step === 'done' ? 'Deposit complete' : 'Review deposit'}</DialogTitle>
           <DialogDescription>
-            {chainName(chainKey)} → {vault.name} on Sonic
+            {chainName(chainKey)} → {vaultBrand(vault).name} on Sonic
           </DialogDescription>
         </DialogHeader>
 
@@ -160,8 +161,8 @@ export function DepositDialog({ review, onClose }: { review: DepositReview; onCl
                   {formatTokenAmount(inputAmount, token.decimals)} {token.symbol}
                 </p>
                 <p className="mt-1 text-foreground">
-                  ≈ {formatTokenAmount(confirmedShares, SHARE_DECIMALS)} {vault.name} are now in your hub wallet. Your
-                  position updates below.
+                  ≈ {formatTokenAmount(confirmedShares, SHARE_DECIMALS)} shares of {vault.name} are now in your hub
+                  wallet. Your position updates below.
                 </p>
               </Callout>
             )}

@@ -9,6 +9,7 @@ import type { SourceChainKey } from '@/config/workshop';
 import { chainName, explorerAddressUrl } from '@/lib/chains';
 import { formatTokenAmount, shortenAddress } from '@/lib/format';
 import { useShareValue } from '../hooks/useShareValue';
+import { vaultBrand } from '../lib/brands';
 import { SHARE_DECIMALS, underlying } from '../lib/vaults';
 import { WithdrawDialog } from './WithdrawDialog';
 
@@ -33,6 +34,7 @@ export function PositionCard({
   const holding = balance?.data;
   const value = useShareValue(vault.vault, holding?.shares || undefined);
   const asset = underlying(vault);
+  const brand = vaultBrand(vault);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
   const shownShares = useTweenedBigint(holding?.shares);
 
@@ -41,7 +43,7 @@ export function PositionCard({
       <CardHeader>
         <CardTitle>Your position</CardTitle>
         <CardDescription>
-          {vault.name}, deposits from {chainName(chainKey)}
+          {brand.name}, deposits from {chainName(chainKey)}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
@@ -57,11 +59,11 @@ export function PositionCard({
               <p className="text-3xl font-semibold tabular-nums">
                 {formatTokenAmount(shownShares ?? holding.shares, SHARE_DECIMALS)}
               </p>
-              <p className="text-sm text-muted-foreground">{vault.name} shares</p>
+              <p className="text-sm text-muted-foreground">shares of {vault.name}</p>
             </div>
             {value !== undefined && (
               <p className="text-sm">
-                Worth ≈ {formatTokenAmount(value, asset.decimals)} {asset.symbol}
+                Worth ≈ {formatTokenAmount(value, asset.decimals)} {brand.ticker}
               </p>
             )}
             <p className="text-xs text-muted-foreground">

@@ -67,6 +67,12 @@
   --success-muted: var(--honey-wash);
   --notice: var(--pure-paper);
 
+  /* Washes behind vault icon tiles */
+  --wash-honey: var(--honey-wash);
+  --wash-linen: var(--linen);
+  --wash-terracotta: #fdebe8;
+  --wash-wisteria: var(--wisteria);
+
   /* Shape, elevation and type */
   --radius: 8px;
   --radius-badge: 4px;
